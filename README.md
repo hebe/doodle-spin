@@ -12,6 +12,8 @@ Public slot machine and public saved-image gallery. Owner password protects imag
 ## Local testing
 Use `npx vercel link` followed by `npx vercel dev`. Pull development env vars with `npx vercel env pull .env.local`; then ensure `DOODLE_PASSWORD`, `SESSION_SECRET`, and `GEMINI_API_KEY` exist. OIDC credentials may be short-lived locally; repeat the pull if Blob authentication expires.
 
+To test boss mode without logging in, add `DOODLE_SPIN_DEV_BOSS_MODE=true` to `.env.local` and restart `vercel dev`. This bypass does not require `DOODLE_PASSWORD` or `SESSION_SECRET`. It cannot activate in a Vercel production deployment.
+
 ## Notes
 - Public Blob URLs are accessible to anyone who has them. Gallery read access is public; write actions require owner login.
 - Session: signed HttpOnly SameSite=Strict cookie, valid seven days; resetting SESSION_SECRET signs out existing sessions.

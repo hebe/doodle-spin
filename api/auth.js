@@ -1,6 +1,6 @@
-import { authorized, matchesPassword, sessionCookie, clearCookie, sameOrigin } from './_lib/auth.js';
+import { authorized, devBossMode, matchesPassword, sessionCookie, clearCookie, sameOrigin } from './_lib/auth.js';
 export async function GET(request) {
-  return Response.json({ signedIn: authorized(request) }, { headers: {'Cache-Control':'no-store'} });
+  return Response.json({ signedIn: authorized(request), devBossMode: devBossMode() }, { headers: {'Cache-Control':'no-store'} });
 }
 export async function POST(request) {
   if (!sameOrigin(request)) return Response.json({error:'Invalid request origin.'},{status:403});
@@ -12,5 +12,5 @@ export async function POST(request) {
 }
 export async function DELETE(request) {
   if (!sameOrigin(request)) return Response.json({error:'Invalid request origin.'},{status:403});
-  return Response.json({signedIn:false},{headers:{'Set-Cookie':clearCookie(request),'Cache-Control':'no-store'}});
+  return Response.json({signedIn:devBossMode(),devBossMode:devBossMode()},{headers:{'Set-Cookie':clearCookie(request),'Cache-Control':'no-store'}});
 }
