@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Doodle Slot Machine</title>
+<title>Doodle Spin</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap">
 <style>
 :root{--paper:#fbf8ee;--ink:#1c1b1f;--accent:#f2a20f;--dot:#cfc8b0;--soft:#f1ebd6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -30,7 +30,7 @@ h1 span{background:linear-gradient(transparent 60%,var(--accent) 60% 92%,transpa
 .lever.pull{animation:pull .55s ease-in-out}
 .ball{width:30px;height:30px;border-radius:50%;background:var(--accent);border:3px solid var(--ink)}
 .stem{width:8px;height:86px;margin-top:-2px;background:var(--ink);border-radius:4px}
-#note{margin:24px auto 0;padding:12px 18px;max-width:96%;background:var(--accent);color:#1c1b1f;border:3px solid var(--ink);border-radius:6px 12px 6px 14px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1.2deg);font-size:23px;line-height:1.2;min-height:calc(2.4em + 30px);display:flex;align-items:center;justify-content:center}
+#note{margin:24px auto 0;padding:12px 18px;max-width:92%;background:var(--accent);color:#1c1b1f;border:3px solid var(--ink);border-radius:6px 12px 6px 14px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1.2deg);font-size:26px;line-height:1.2}
 .row{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:20px}
 .big{font:inherit;font-size:28px;padding:8px 30px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);color:inherit;box-shadow:4px 4px 0 var(--ink);cursor:pointer}
 .big:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
@@ -48,12 +48,21 @@ h2{font-weight:400;font-size:28px;margin:22px 0 10px;text-align:left}
 body.gal .machine,body.gal #note,body.gal .big,body.gal .hint,body.gal .sub{display:none}
 @media (min-width:600px){.machine{gap:18px;padding:26px 22px 22px 26px;grid-template-columns:repeat(3,minmax(0,1fr)) 54px;border-radius:40px 32px 42px 30px/32px 42px 30px 40px}.win{border-radius:24px 18px 26px 18px;padding:6px}.ball{width:44px;height:44px}.stem{width:11px;height:130px}.hold{font-size:22px;padding:2px 20px}#note{font-size:34px}.big{font-size:34px}.sub{font-size:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* Optional AI example, in the same notebook style as the slot machine. */
+#ai-section{max-width:620px;margin:26px auto 0;text-align:center}
+#generate-status{min-height:1.3em;margin:10px 0;font-size:18px}
+#generated-result{margin:12px auto 0;padding:14px;background:var(--paper);border:3px solid var(--ink);border-radius:20px 15px 23px 16px;box-shadow:5px 5px 0 var(--ink)}
+#generated-result[hidden],#ai-section[hidden]{display:none}
+#generated-image{display:block;width:100%;height:auto;border-radius:9px;background:#fff}
+#generated-caption{margin:12px 0 4px;font-size:23px}
+#download-image{display:inline-block;margin:6px 0 4px;color:inherit;text-underline-offset:4px}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4"/></filter></svg>
 <main>
-<h1><span>Doodle slot</span></h1>
+<h1><span>Doodle Spin</span></h1>
 <p class="sub">Pull the lever, then draw what lands.</p>
 <div class="machine" id="m">
 <div class="reel"><div class="win" role="img" aria-label="Object"></div><button class="hold" aria-pressed="false">hold</button></div>
@@ -64,6 +73,15 @@ body.gal .machine,body.gal #note,body.gal .big,body.gal .hint,body.gal .sub{disp
 <div id="note">Pull the lever!</div>
 <div class="row"><button class="big" id="go">Pull</button><button class="hold" id="mu" aria-pressed="true">sound off</button><button class="hold" id="gv">all doodles</button></div>
 <p class="hint">Space also pulls. Hold a reel to keep it and re-spin the rest.</p>
+<section id="ai-section" aria-label="AI doodle example">
+<button class="big" id="generate-btn" type="button">Show me!</button>
+<p id="generate-status" role="status" aria-live="polite"></p>
+<div id="generated-result" hidden>
+<img id="generated-image" alt="AI-generated example doodle">
+<p id="generated-caption"></p>
+<a id="download-image" download="doodle-spin.png">Save doodle</a>
+</div>
+</section>
 <section id="gal" hidden></section>
 </main>
 <script>
@@ -157,7 +175,7 @@ const rnd=n=>Math.random()*n|0,held=i=>holds[i].getAttribute('aria-pressed')==='
 let cur=R.map(a=>rnd(a.length)),busy=false,mute=true,ac=null;
 const show=(i,k)=>{wins[i].innerHTML=R[i][k][1]};
 function tone(f,d,t,v,w){if(mute||!ac)return;try{const o=ac.createOscillator(),g=ac.createGain(),s=ac.currentTime+(w||0);o.type=t||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.06,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(ac.destination);o.start(s);o.stop(s+d)}catch(e){}}
-function setBusy(b){busy=b;$('#go').disabled=b;holds.forEach(h=>h.disabled=b)}
+function setBusy(b){busy=b;$('#go').disabled=b;holds.forEach(h=>h.disabled=b);if(!generating)$('#generate-btn').disabled=b}
 function done(){
  setBusy(false);
  const n=[0,1,2].map(i=>R[i][cur[i]]);
@@ -189,7 +207,77 @@ $('#go').addEventListener('click',pull);$('#lv').addEventListener('click',pull);
 $('#mu').addEventListener('click',e=>{mute=!mute;e.target.setAttribute('aria-pressed',mute);e.target.textContent=mute?'sound off':'sound on'});
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target===document.body){e.preventDefault();pull()}});
 function buildGal(){$('#gal').innerHTML=[['Things',0],['Faces',1],['Extras',2]].map(t=>'<h2>'+t[0]+' ('+R[t[1]].length+')</h2><div class="grid">'+R[t[1]].map(x=>'<div class="cell"><div class="pic">'+x[1]+'</div><span>'+x[0]+'</span></div>').join('')+'</div>').join('')}
-$('#gv').addEventListener('click',e=>{const on=document.body.classList.toggle('gal');$('#gal').hidden=!on;e.target.textContent=on?'back to slot':'all doodles';if(on&&!$('#gal').innerHTML)buildGal();document.body.scrollTo(0,0);window.scrollTo(0,0)});
+$('#gv').addEventListener('click',e=>{const on=document.body.classList.toggle('gal');$('#gal').hidden=!on;$('#ai-section').hidden=on;e.target.textContent=on?'back to slot':'all doodles';if(on&&!$('#gal').innerHTML)buildGal();document.body.scrollTo(0,0);window.scrollTo(0,0)});
+
+// Shared instructions are unchanged for every spin; only the subject changes.
+const STYLE_PROMPT = `Create a single, charming, hand-copyable doodle based on the given subject.
+
+Style: Playful, slightly quirky bullet-journal/sketchnote illustration. Black fine-liner outlines with varied line weight, natural hand-drawn imperfections, simple expressive features, and restrained crosshatching or striped shadows.
+
+Give objects a little dimensionality or perspective when appropriate, while keeping the design achievable by hand in a small dotted notebook.
+
+Black and white, with no additional colours. Plain white or subtle dotted-paper background. No elaborate scenery or unnecessary decorations.
+
+Interpret the combination creatively, integrating the expression and accessory naturally into the object. Prioritize personality, clear silhouettes, and manageable detail.`;
+
+let generating = false;
+let currentImageUrl = null;
+
+function getDoodleSubject() {
+  const [object, expression, accessory] = [0, 1, 2].map(i => R[i][cur[i]][0]);
+  return `${expression} ${object} ${accessory}`;
+}
+
+async function generateDoodle() {
+  if (busy || generating) return;
+  const subject = getDoodleSubject(); // Snapshot this spin before awaiting the API.
+  const prompt = `${STYLE_PROMPT}\n\nSubject: ${subject}\nDraw one standalone doodle of this subject.`;
+  const button = $('#generate-btn');
+  const status = $('#generate-status');
+  const result = $('#generated-result');
+  generating = true;
+  button.disabled = true;
+  button.textContent = 'Drawing...';
+  status.textContent = 'Nano Banana is scribbling...';
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    });
+    if (!response.ok) {
+      let message = `Image generation failed (${response.status}).`;
+      try { const data = await response.json(); if (data.error) message = data.error; } catch (_) {}
+      throw new Error(message);
+    }
+    const blob = await response.blob();
+    if (!['image/png', 'image/jpeg', 'image/webp'].includes(blob.type)) {
+      throw new Error('The server did not return a supported image.');
+    }
+    const nextUrl = URL.createObjectURL(blob);
+    const previousUrl = currentImageUrl;
+    currentImageUrl = nextUrl;
+    $('#generated-image').src = nextUrl;
+    $('#generated-image').alt = `Example doodle: ${subject}`;
+    $('#generated-caption').textContent = subject;
+    const download = $('#download-image');
+    download.href = nextUrl;
+    download.download = `doodle-spin-${Date.now()}.${blob.type === 'image/jpeg' ? 'jpg' : blob.type === 'image/webp' ? 'webp' : 'png'}`;
+    result.hidden = false;
+    status.textContent = '';
+    if (previousUrl) URL.revokeObjectURL(previousUrl);
+  } catch (error) {
+    console.error('Doodle generation failed:', error);
+    status.textContent = error.message || 'Something went wrong.';
+  } finally {
+    generating = false;
+    button.disabled = busy;
+    button.textContent = 'Show me!';
+  }
+}
+$('#generate-btn').addEventListener('click', generateDoodle);
+window.addEventListener('pagehide', () => { if (currentImageUrl) URL.revokeObjectURL(currentImageUrl); });
+
 cur.forEach((k,i)=>show(i,k));
 </script>
 </body>
