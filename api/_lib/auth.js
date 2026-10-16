@@ -4,7 +4,10 @@ const COOKIE = 'doodle_spin_session';
 const TTL = 7 * 24 * 60 * 60;
 // `vercel dev` may run functions with NODE_ENV=production, so use Vercel's
 // deployment environment to keep this local-only bypass out of production.
-export const devBossMode = () => process.env.DOODLE_SPIN_DEV_BOSS_MODE === 'true' && process.env.VERCEL_ENV !== 'production';
+export const devBossMode = () =>
+  process.env.DOODLE_SPIN_DEV_BOSS_MODE === 'true' &&
+  process.env.NODE_ENV === 'development' &&
+  process.env.VERCEL !== '1';
 const sign = (message) => createHmac('sha256', process.env.SESSION_SECRET || '').update(message).digest('base64url');
 
 export function authorized(request) {
