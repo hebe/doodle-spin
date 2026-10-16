@@ -12,7 +12,7 @@ const STYLE_PROMPT = `Draw the subject as an adorable, upright, front-facing kaw
 Use a simple, compact silhouette with rounded, chubby proportions,
 a large expressive face, and tiny limbs where appropriate.
 Keep the object recognizable but stylized, like a cute cartoon mascot
-rather than a realistic object.
+rather than a realistic object. The face of the character clearly shows the expression named in the subject.
 
 Hand-drawn black fineliner doodle, slightly imperfect outlines,
 varied line weight, minimal details and subtle hatching.
