@@ -31,11 +31,9 @@ h1 span{background:linear-gradient(transparent 60%,var(--accent) 60% 92%,transpa
 .ball{width:30px;height:30px;border-radius:50%;background:var(--accent);border:3px solid var(--ink)}
 .stem{width:8px;height:86px;margin-top:-2px;background:var(--ink);border-radius:4px}
 #note{margin:24px auto 0;padding:12px 18px;max-width:92%;background:var(--accent);color:#1c1b1f;border:3px solid var(--ink);border-radius:6px 12px 6px 14px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1.2deg);font-size:26px;line-height:1.2}
-.row{display:flex;gap:14px;justify-content:center;align-items:center;margin-top:20px}
 .big{font:inherit;font-size:28px;padding:8px 30px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);color:inherit;box-shadow:4px 4px 0 var(--ink);cursor:pointer}
 .big:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
 .big:disabled{opacity:.55;cursor:default}
-.hint{margin:16px 0 0;font-size:17px;opacity:.7}
 button:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
 @keyframes jit{50%{transform:translateY(9px)}}
 @keyframes land{0%{transform:translateY(-14px) scale(.95)}100%{transform:none}}
@@ -45,7 +43,7 @@ h2{font-weight:400;font-size:28px;margin:22px 0 10px;text-align:left}
 .cell{display:flex;flex-direction:column;gap:2px;font-size:16px;line-height:1.1}
 .pic{aspect-ratio:1;border:2px solid var(--ink);border-radius:14px 10px 16px 10px;background:var(--soft);padding:2px;display:grid;place-items:center;color:var(--ink)}
 .pic svg{width:100%;height:100%;filter:url(#wob)}
-body.gal .machine,body.gal #note,body.gal .big,body.gal .hint,body.gal .sub{display:none}
+body.gal .machine,body.gal #note,body.gal #generate-btn,body.gal .sub{display:none}
 @media (min-width:600px){.machine{gap:18px;padding:26px 22px 22px 26px;grid-template-columns:repeat(3,minmax(0,1fr)) 54px;border-radius:40px 32px 42px 30px/32px 42px 30px 40px}.win{border-radius:24px 18px 26px 18px;padding:6px}.ball{width:44px;height:44px}.stem{width:11px;height:130px}.hold{font-size:22px;padding:2px 20px}#note{font-size:34px}.big{font-size:34px}.sub{font-size:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 
@@ -57,24 +55,55 @@ body.gal .machine,body.gal #note,body.gal .big,body.gal .hint,body.gal .sub{disp
 #generated-image{display:block;width:100%;height:auto;border-radius:9px;background:#fff}
 #generated-caption{margin:12px 0 4px;font-size:23px}
 #download-image{display:inline-block;margin:6px 0 4px;color:inherit;text-underline-offset:4px}
+#gallery-section[hidden],#login-form[hidden],#boss-panel[hidden]{display:none}
+#login-password{font:inherit;font-size:20px;padding:8px;width:min(100%,250px);background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:8px}
+#gallery-section{margin:28px auto;text-align:left}
+.saved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.saved-card{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:9px;min-width:0}
+.saved-card img{width:100%;display:block;aspect-ratio:1.3;object-fit:contain;background:#faf7ef;border-radius:9px}
+.saved-card p{font-size:18px;margin:6px 0;overflow-wrap:anywhere}
+.saved-actions{display:flex;gap:6px;flex-wrap:wrap}
+.saved-actions button,.saved-actions a{font:inherit;font-size:16px;border:2px solid var(--ink);border-radius:9px;padding:2px 8px;background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none}
+#gallery-status,#login-status{font-size:18px}
+/* Header with sound icon, lever, boss mode */
+.top{position:relative}
+.icon{position:absolute;right:2px;top:2px;width:42px;height:42px;display:grid;place-items:center;padding:0;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);cursor:pointer}
+.icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.icon .off{display:none}
+.icon[aria-pressed="true"]{opacity:.7}
+.icon[aria-pressed="true"] .on{display:none}
+.icon[aria-pressed="true"] .off{display:inline}
+.lever:disabled{cursor:default}
+#boss{margin:18px auto 0;max-width:460px}
+.link{font:inherit;font-size:19px;padding:4px 8px;border:0;background:none;color:inherit;opacity:.75;cursor:pointer;text-decoration:underline dotted;text-underline-offset:5px}
+.link:hover{opacity:1}
+#login-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+#boss-panel .big{margin-top:4px}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4"/></filter></svg>
 <main>
-<h1><span>Doodle Spin</span></h1>
+<header class="top"><h1><span>Doodle Spin</span></h1>
+<button class="icon" id="mu" type="button" aria-pressed="true" aria-label="Sound off" title="Sound on/off"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/><path class="on" d="M16 9q3 3 0 6M19 6q6 6 0 12"/><path class="off" d="M16 9l6 6M22 9l-6 6"/></svg></button></header>
 <p class="sub">Pull the lever, then draw what lands.</p>
 <div class="machine" id="m">
 <div class="reel"><div class="win" role="img" aria-label="Object"></div><button class="hold" aria-pressed="false">hold</button></div>
 <div class="reel"><div class="win" role="img" aria-label="Expression"></div><button class="hold" aria-pressed="false">hold</button></div>
 <div class="reel"><div class="win" role="img" aria-label="Accessory"></div><button class="hold" aria-pressed="false">hold</button></div>
-<button class="lever" id="lv" aria-label="Pull the lever"><span class="ball"></span><span class="stem"></span></button>
+<button class="lever" id="lv" aria-label="Pull the lever (Space)" title="Pull (Space)"><span class="ball"></span><span class="stem"></span></button>
 </div>
 <div id="note">Pull the lever!</div>
-<div class="row"><button class="big" id="go">Pull</button><button class="hold" id="mu" aria-pressed="true">sound off</button><button class="hold" id="gv">all doodles</button></div>
-<p class="hint">Space also pulls. Hold a reel to keep it and re-spin the rest.</p>
-<section id="ai-section" aria-label="AI doodle example">
-<button class="big" id="generate-btn" type="button">Show me!</button>
+<div id="boss">
+<button class="link" id="boss-toggle" type="button">boss mode</button>
+<form id="login-form" hidden><label class="sr" for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" placeholder="password" required><button class="hold" type="submit">Unlock</button></form>
+<p id="login-status" role="status"></p>
+<div id="boss-panel" hidden>
+<button class="big" id="generate-btn" type="button">Doodle it!</button>
+<div class="links"><button class="link" id="gallery-toggle" type="button">saved gallery</button><button class="link" id="gv" type="button">all doodles</button><button class="link" id="logout-btn" type="button">log out</button></div>
+<section id="ai-section" aria-label="AI doodle">
 <p id="generate-status" role="status" aria-live="polite"></p>
 <div id="generated-result" hidden>
 <img id="generated-image" alt="AI-generated example doodle">
@@ -82,6 +111,9 @@ body.gal .machine,body.gal #note,body.gal .big,body.gal .hint,body.gal .sub{disp
 <a id="download-image" download="doodle-spin.png">Save doodle</a>
 </div>
 </section>
+</div>
+</div>
+<section id="gallery-section" hidden><h2>Saved doodles <button class="hold" id="favorites-only" aria-pressed="false">All</button></h2><p id="gallery-status" role="status"></p><div id="saved-grid" class="saved-grid"></div></section>
 <section id="gal" hidden></section>
 </main>
 <script>
@@ -175,7 +207,7 @@ const rnd=n=>Math.random()*n|0,held=i=>holds[i].getAttribute('aria-pressed')==='
 let cur=R.map(a=>rnd(a.length)),busy=false,mute=true,ac=null;
 const show=(i,k)=>{wins[i].innerHTML=R[i][k][1]};
 function tone(f,d,t,v,w){if(mute||!ac)return;try{const o=ac.createOscillator(),g=ac.createGain(),s=ac.currentTime+(w||0);o.type=t||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.06,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(ac.destination);o.start(s);o.stop(s+d)}catch(e){}}
-function setBusy(b){busy=b;$('#go').disabled=b;holds.forEach(h=>h.disabled=b);if(!generating)$('#generate-btn').disabled=b}
+function setBusy(b){busy=b;$('#lv').disabled=b;holds.forEach(h=>h.disabled=b);if(!generating)$('#generate-btn').disabled=b}
 function done(){
  setBusy(false);
  const n=[0,1,2].map(i=>R[i][cur[i]]);
@@ -203,80 +235,148 @@ function pull(){
  });
 }
 holds.forEach(h=>h.addEventListener('click',()=>{const on=!held(holds.indexOf(h));h.setAttribute('aria-pressed',on);h.textContent=on?'held':'hold';tone(on?520:380,.08,'triangle',.04)}));
-$('#go').addEventListener('click',pull);$('#lv').addEventListener('click',pull);
-$('#mu').addEventListener('click',e=>{mute=!mute;e.target.setAttribute('aria-pressed',mute);e.target.textContent=mute?'sound off':'sound on'});
+$('#lv').addEventListener('click',pull);
+$('#mu').addEventListener('click',e=>{mute=!mute;const b=e.currentTarget;b.setAttribute('aria-pressed',mute);b.setAttribute('aria-label',mute?'Sound off':'Sound on');if(!mute){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(x){}tone(520,.08,'triangle',.05)}});
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target===document.body){e.preventDefault();pull()}});
 function buildGal(){$('#gal').innerHTML=[['Things',0],['Faces',1],['Extras',2]].map(t=>'<h2>'+t[0]+' ('+R[t[1]].length+')</h2><div class="grid">'+R[t[1]].map(x=>'<div class="cell"><div class="pic">'+x[1]+'</div><span>'+x[0]+'</span></div>').join('')+'</div>').join('')}
-$('#gv').addEventListener('click',e=>{const on=document.body.classList.toggle('gal');$('#gal').hidden=!on;$('#ai-section').hidden=on;e.target.textContent=on?'back to slot':'all doodles';if(on&&!$('#gal').innerHTML)buildGal();document.body.scrollTo(0,0);window.scrollTo(0,0)});
-
-// Shared instructions are unchanged for every spin; only the subject changes.
-const STYLE_PROMPT = `Create a single, charming, hand-copyable doodle based on the given subject.
-
-Style: Playful, slightly quirky bullet-journal/sketchnote illustration. Black fine-liner outlines with varied line weight, natural hand-drawn imperfections, simple expressive features, and restrained crosshatching or striped shadows.
-
-Give objects a little dimensionality or perspective when appropriate, while keeping the design achievable by hand in a small dotted notebook.
-
-Black and white, with no additional colours. Plain white or subtle dotted-paper background. No elaborate scenery or unnecessary decorations.
-
-Interpret the combination creatively, integrating the expression and accessory naturally into the object. Prioritize personality, clear silhouettes, and manageable detail.`;
+// Keep the built-in doodle catalog and saved gallery mutually exclusive.
+function closeSavedGallery(){
+  $('#gallery-section').hidden=true;
+  $('#gallery-toggle').textContent='saved gallery';
+}
+function closeDoodleCatalog(){
+  document.body.classList.remove('gal');
+  $('#gal').hidden=true;
+  $('#ai-section').hidden=false;
+  $('#gv').textContent='all doodles';
+}
+$('#gv').addEventListener('click',()=>{
+  const opening=!document.body.classList.contains('gal');
+  closeSavedGallery();
+  if(opening){
+    document.body.classList.add('gal');
+    $('#gal').hidden=false;
+    $('#ai-section').hidden=true;
+    $('#gv').textContent='back to slot';
+    if(!$('#gal').innerHTML)buildGal();
+  }else{
+    closeDoodleCatalog();
+  }
+  window.scrollTo(0,0);
+});
 
 let generating = false;
-let currentImageUrl = null;
+let signedIn = false;
+let galleryItems = [];
+let favoritesOnly = false;
 
-function getDoodleSubject() {
-  const [object, expression, accessory] = [0, 1, 2].map(i => R[i][cur[i]][0]);
-  return `${expression} ${object} ${accessory}`;
+function getDoodleParts() { return [0,1,2].map(i=>R[i][cur[i]][0]); }
+async function apiJson(path, options={}) {
+  const response = await fetch(path,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(result.error||`Request failed (${response.status})`);
+  return result;
 }
+function refreshAuthUi() {
+  $('#boss-panel').hidden=!signedIn;
+  $('#boss-toggle').hidden=signedIn;
+  if(signedIn)$('#login-form').hidden=true;
+  renderSaved();
+}
+function toggleLogin(show) {$('#login-form').hidden=!show; if(show) $('#login-password').focus();}
+$('#boss-toggle').addEventListener('click',()=>toggleLogin($('#login-form').hidden));
+$('#login-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  $('#login-status').textContent='Signing in...';
+  try {
+    await apiJson('/api/auth',{method:'POST',body:JSON.stringify({password:$('#login-password').value})});
+    signedIn=true; $('#login-password').value=''; toggleLogin(false); $('#login-status').textContent='';refreshAuthUi();
+  }catch(error){$('#login-status').textContent=error.message;}
+});
+$('#logout-btn').addEventListener('click',async()=>{
+  try {await apiJson('/api/auth',{method:'DELETE'});}catch(e){console.error(e);}
+  signedIn=false;
+  closeSavedGallery();
+  closeDoodleCatalog();
+  $('#generated-result').hidden=true;$('#generate-status').textContent='';
+  refreshAuthUi();
+});
 
 async function generateDoodle() {
-  if (busy || generating) return;
-  const subject = getDoodleSubject(); // Snapshot this spin before awaiting the API.
-  const prompt = `${STYLE_PROMPT}\n\nSubject: ${subject}\nDraw one standalone doodle of this subject.`;
-  const button = $('#generate-btn');
-  const status = $('#generate-status');
-  const result = $('#generated-result');
-  generating = true;
-  button.disabled = true;
-  button.textContent = 'Drawing...';
-  status.textContent = 'Nano Banana is scribbling...';
+  if(busy||generating)return;
+  if(!signedIn){toggleLogin(true);return;}
+  const [object,expression,accessory]=getDoodleParts();
+  const subject=`${expression} ${object} ${accessory}`;
+  generating=true;
+  $('#generate-btn').disabled=true;
+  $('#generate-btn').textContent='Drawing...';
+  $('#generate-status').textContent='Nano Banana is scribbling and saving...';
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt }),
-    });
-    if (!response.ok) {
-      let message = `Image generation failed (${response.status}).`;
-      try { const data = await response.json(); if (data.error) message = data.error; } catch (_) {}
-      throw new Error(message);
+    const saved=await apiJson('/api/generate',{method:'POST',body:JSON.stringify({object,expression,accessory})});
+    $('#generated-image').src=saved.url;
+    $('#generated-image').alt=`Example doodle: ${subject}`;
+    $('#generated-caption').textContent=subject;
+    $('#download-image').href=saved.url;
+    $('#download-image').download=`doodle-spin-${saved.id}.png`;
+    $('#generated-result').hidden=false;
+    $('#generate-status').textContent='Saved to gallery!';
+    if(!$('#gallery-section').hidden) await loadGallery();
+  }catch(error){$('#generate-status').textContent=error.message;}
+  finally {generating=false;$('#generate-btn').disabled=busy;$('#generate-btn').textContent='Doodle it!';refreshAuthUi();}
+}
+$('#generate-btn').addEventListener('click',generateDoodle);
+
+function renderSaved(){
+  const parent=$('#saved-grid'); parent.replaceChildren();
+  const items=galleryItems.filter(x=>!favoritesOnly||x.favorite);
+  if(!items.length){$('#gallery-status').textContent=galleryItems.length?'No favorites yet.':'No saved doodles yet.';return;}
+  $('#gallery-status').textContent=`${items.length} doodle${items.length===1?'':'s'}`;
+  for(const item of items){
+    const card=document.createElement('article');card.className='saved-card';
+    const img=document.createElement('img');img.src=item.url;img.alt=item.subject;img.loading='lazy';card.append(img);
+    const title=document.createElement('p');title.textContent=item.subject;card.append(title);
+    const actions=document.createElement('div');actions.className='saved-actions';
+    const save=document.createElement('a');save.href=item.url;save.target='_blank';save.rel='noopener noreferrer';save.textContent='Open';actions.append(save);
+    if(signedIn){
+      const star=document.createElement('button');star.type='button';star.textContent=item.favorite?'★ Starred':'☆ Star';
+      star.addEventListener('click',async()=>{
+        star.disabled=true;
+        try{await apiJson('/api/gallery',{method:'PATCH',body:JSON.stringify({id:item.id,favorite:!item.favorite})});item.favorite=!item.favorite;renderSaved();}
+        catch(e){alert(e.message);star.disabled=false;}
+      });actions.append(star);
+      const remove=document.createElement('button');remove.type='button';remove.textContent='Delete';
+      remove.addEventListener('click',async()=>{
+        if(!confirm(`Delete "${item.subject}" permanently?`))return;
+        remove.disabled=true;
+        try{await apiJson('/api/gallery',{method:'DELETE',body:JSON.stringify({id:item.id})});galleryItems=galleryItems.filter(x=>x.id!==item.id);renderSaved();}
+        catch(e){alert(e.message);remove.disabled=false;}
+      });actions.append(remove);
     }
-    const blob = await response.blob();
-    if (!['image/png', 'image/jpeg', 'image/webp'].includes(blob.type)) {
-      throw new Error('The server did not return a supported image.');
-    }
-    const nextUrl = URL.createObjectURL(blob);
-    const previousUrl = currentImageUrl;
-    currentImageUrl = nextUrl;
-    $('#generated-image').src = nextUrl;
-    $('#generated-image').alt = `Example doodle: ${subject}`;
-    $('#generated-caption').textContent = subject;
-    const download = $('#download-image');
-    download.href = nextUrl;
-    download.download = `doodle-spin-${Date.now()}.${blob.type === 'image/jpeg' ? 'jpg' : blob.type === 'image/webp' ? 'webp' : 'png'}`;
-    result.hidden = false;
-    status.textContent = '';
-    if (previousUrl) URL.revokeObjectURL(previousUrl);
-  } catch (error) {
-    console.error('Doodle generation failed:', error);
-    status.textContent = error.message || 'Something went wrong.';
-  } finally {
-    generating = false;
-    button.disabled = busy;
-    button.textContent = 'Show me!';
+    card.append(actions);parent.append(card);
   }
 }
-$('#generate-btn').addEventListener('click', generateDoodle);
-window.addEventListener('pagehide', () => { if (currentImageUrl) URL.revokeObjectURL(currentImageUrl); });
+async function loadGallery(){
+  $('#gallery-status').textContent='Loading doodles...';
+  try {galleryItems=(await apiJson('/api/gallery')).items;renderSaved();}
+  catch(e){$('#gallery-status').textContent=e.message;}
+}
+$('#gallery-toggle').addEventListener('click',()=>{
+  const opening=$('#gallery-section').hidden;
+  closeDoodleCatalog();
+  if(opening){
+    $('#gallery-section').hidden=false;
+    $('#gallery-toggle').textContent='hide gallery';
+    loadGallery();
+  }else{
+    closeSavedGallery();
+  }
+});
+$('#favorites-only').addEventListener('click',()=>{
+  favoritesOnly=!favoritesOnly;
+  $('#favorites-only').textContent=favoritesOnly?'★ Favorites':'All';
+  $('#favorites-only').setAttribute('aria-pressed',String(favoritesOnly));renderSaved();
+});
+apiJson('/api/auth').then(x=>{signedIn=x.signedIn;refreshAuthUi();}).catch(()=>refreshAuthUi());
 
 cur.forEach((k,i)=>show(i,k));
 </script>
