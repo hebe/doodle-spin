@@ -6,7 +6,7 @@
 <title>Doodle Spin</title>
 <meta name="theme-color" content="#fbf8ee" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#23211d" media="(prefers-color-scheme: dark)">
-<!-- Put image files in /public/icons/ (or equivalent public /icons/ directory) -->
+<!-- Static icon files live in /icons/. -->
 <link rel="icon" href="/icons/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -106,14 +106,16 @@ body.gal .machine,body.gal #note,body.gal #generate-btn,body.gal .sub{display:no
 <div class="reel"><div class="win" role="img" aria-label="Accessory"></div><button class="hold" aria-pressed="false">hold</button></div>
 <button class="lever" id="lv" aria-label="Pull the lever (Space)" title="Pull (Space)"><span class="ball"></span><span class="stem"></span></button>
 </div>
-<div id="note">Pull the lever!</div>
+<div id="note" role="status">Pull the lever!</div>
 <div id="boss">
-<button class="link" id="boss-toggle" type="button">boss mode</button>
+<button class="link" id="share-roll" type="button">share roll</button><button class="link" id="boss-toggle" type="button">boss mode</button>
 <form id="login-form" hidden><label class="sr" for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" placeholder="password" required><button class="hold" type="submit">Unlock</button></form>
 <p id="login-status" role="status"></p>
 <div id="boss-panel" hidden>
 <button class="big" id="generate-btn" type="button">Doodle it!</button>
 <div class="links"><button class="link" id="gallery-toggle" type="button">saved gallery</button><button class="link" id="gv" type="button">all doodles</button><button class="link" id="logout-btn" type="button">log out</button></div>
+<div class="links"><button class="link" id="my-version-btn" type="button">photograph my version</button></div>
+<section id="my-version-section" hidden aria-label="Photograph my version"><video id="camera-preview" playsinline autoplay hidden style="width:min(100%,420px);border:3px solid var(--ink);border-radius:14px"></video><canvas id="camera-canvas" hidden></canvas><div class="links"><button class="hold" id="camera-start" type="button">Open camera</button><button class="hold" id="camera-capture" type="button" hidden>Take photo</button><button class="hold" id="camera-save" type="button" hidden>Save photo</button><button class="hold" id="camera-cancel" type="button" hidden>Cancel</button></div><p id="camera-status" role="status"></p></section>
 <section id="ai-section" aria-label="AI doodle">
 <p id="generate-status" role="status" aria-live="polite"></p>
 <div id="generated-result" hidden>
@@ -217,12 +219,22 @@ const R=[OBJ,EXP,ACC],$=s=>document.querySelector(s),wins=[...document.querySele
 const rnd=n=>Math.random()*n|0,held=i=>holds[i].getAttribute('aria-pressed')==='true';
 let cur=R.map(a=>rnd(a.length)),busy=false,mute=true,ac=null;
 const show=(i,k)=>{wins[i].innerHTML=R[i][k][1]};
+const slug=s=>s.toLowerCase().replace(/\s+/g,'-');
+const sentence=()=>{const n=[0,1,2].map(i=>R[i][cur[i]][0]);return 'Draw '+(/^[aeiou]/.test(n[1][0])?'an ':'a ')+n[1]+' '+n[0]+' '+n[2]};
+function shareUrl(){const parts=cur.map((k,i)=>slug(R[i][k][0]));return location.origin+location.pathname+location.search+'#r='+parts.join('.')}
+function applyRollHash(){
+ const match=location.hash.match(/^#r=([^.]*)\.([^.]*)\.([^.]*)$/);
+ let slugs=[];try{slugs=match?match.slice(1).map(decodeURIComponent):[]}catch{slugs=[]}
+ cur=R.map((pool,i)=>{const found=slugs[i]?pool.findIndex(item=>slug(item[0])===slugs[i]): -1;return found<0?rnd(pool.length):found});
+ cur.forEach((k,i)=>show(i,k));$('#note').textContent=sentence();
+}
+function updateRollUrl(){history.replaceState(null,'',shareUrl())}
 function tone(f,d,t,v,w){if(mute||!ac)return;try{const o=ac.createOscillator(),g=ac.createGain(),s=ac.currentTime+(w||0);o.type=t||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.06,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(ac.destination);o.start(s);o.stop(s+d)}catch(e){}}
 function setBusy(b){busy=b;$('#lv').disabled=b;holds.forEach(h=>h.disabled=b);if(!generating)$('#generate-btn').disabled=b}
 function done(){
  setBusy(false);
- const n=[0,1,2].map(i=>R[i][cur[i]]);
- $('#note').textContent='Draw '+(/^[aeiou]/.test(n[1][0])?'an ':'a ')+n[1][0]+' '+n[0][0]+' '+n[2][0];
+ $('#note').textContent=sentence();
+ updateRollUrl();
 }
 function pull(){
  if(busy)return;
@@ -345,7 +357,7 @@ function renderSaved(){
   for(const item of items){
     const card=document.createElement('article');card.className='saved-card';
     const img=document.createElement('img');img.src=item.url;img.alt=item.subject;img.loading='lazy';card.append(img);
-    const title=document.createElement('p');title.textContent=item.subject;card.append(title);
+    const title=document.createElement('p');title.textContent=item.subject.startsWith('My version: ')?item.subject.slice(12):item.subject;card.append(title);
     const actions=document.createElement('div');actions.className='saved-actions';
     const save=document.createElement('a');save.href=item.url;save.target='_blank';save.rel='noopener noreferrer';save.textContent='Open';actions.append(save);
     if(signedIn){
@@ -389,7 +401,35 @@ $('#favorites-only').addEventListener('click',()=>{
 });
 apiJson('/api/auth').then(x=>{signedIn=x.signedIn;refreshAuthUi();}).catch(()=>refreshAuthUi());
 
+$('#share-roll').addEventListener('click',async()=>{
+ const url=shareUrl(),button=$('#share-roll'),shareText=sentence();
+ if(navigator.share){try{await navigator.share({title:'Doodle Spin',text:shareText,url});return}catch(e){if(e.name==='AbortError')return}}
+ try{await navigator.clipboard.writeText(url);button.textContent='link copied';setTimeout(()=>{button.textContent='share roll'},1500)}
+ catch(e){window.prompt('Copy this link to share your roll:',url)}
+});
+window.addEventListener('hashchange',()=>{applyRollHash()});
+
+let cameraStream=null,capturedPhoto=null;
+const stopCamera=()=>{cameraStream?.getTracks().forEach(t=>t.stop());cameraStream=null;$('#camera-preview').srcObject=null};
+$('#my-version-btn').addEventListener('click',()=>{
+ if(!signedIn){toggleLogin(true);return}
+ const section=$('#my-version-section');section.hidden=!section.hidden;
+});
+$('#camera-start').addEventListener('click',async()=>{
+ try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});$('#camera-preview').srcObject=cameraStream;$('#camera-preview').hidden=false;$('#camera-capture').hidden=false;$('#camera-cancel').hidden=false;$('#camera-status').textContent='Frame your drawing, then take a photo.'}
+ catch(e){$('#camera-status').textContent='Could not open the camera. Check camera permission and try again.'}
+});
+$('#camera-capture').addEventListener('click',()=>{const v=$('#camera-preview'),c=$('#camera-canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);capturedPhoto=c.toDataURL('image/jpeg',.9);stopCamera();v.hidden=true;$('#camera-capture').hidden=true;$('#camera-save').hidden=false;$('#camera-status').textContent='Photo ready to save.'});
+$('#camera-save').addEventListener('click',async()=>{
+ if(!signedIn||!capturedPhoto)return;
+ $('#camera-save').disabled=true;$('#camera-status').textContent='Saving photo...';
+ try{await apiJson('/api/my-version',{method:'POST',body:JSON.stringify({image:capturedPhoto,subject:getDoodleParts().join(' ')})});capturedPhoto=null;$('#camera-status').textContent='Your version is saved to the gallery.';$('#camera-save').hidden=true;if(!$('#gallery-section').hidden)await loadGallery()}
+ catch(e){$('#camera-status').textContent=e.message}
+ finally{$('#camera-save').disabled=false}
+});
+$('#camera-cancel').addEventListener('click',()=>{stopCamera();capturedPhoto=null;$('#camera-preview').hidden=true;$('#camera-capture').hidden=true;$('#camera-save').hidden=true;$('#camera-cancel').hidden=true;$('#camera-status').textContent=''});
 cur.forEach((k,i)=>show(i,k));
+if(location.hash.startsWith('#r='))applyRollHash();
 </script>
 </body>
 </html>
