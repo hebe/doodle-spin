@@ -1,0 +1,88 @@
+// Doodle parts: each pool item is [name, svgMarkup, ...]. Shared by the reels and the catalog.
+const S=b=>'<svg viewBox="6 6 92 92" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+b+'</svg>';
+export const OBJ=[
+['toaster',S('<path d="M36 46V34Q28 32 28 24Q28 16 38 16H62Q72 16 72 24Q72 32 64 34V46Z" class="a"/><path d="M42 42V32q-6-1-6-6q0-4 4-4h20q4 0 4 4q0 5-6 6v10" stroke-width="1.6"/><rect x="14" y="44" width="72" height="42" rx="10" class="p"/><path d="M26 44h48" stroke-width="5"/><path d="M90 58v14M86 58h6"/><circle cx="68" cy="68" r="5" class="a"/><path d="M24 86v5M76 86v5M22 78l8-8M32 78l8-8" /><path d="M24 54q0-3 4-3" stroke-width="2"/>')],
+['cactus',S('<path d="M40 84V38q0-12 10-12t10 12v46z" class="p"/><path d="M40 62H30q-7 0-7-7V42M60 52h10q7 0 7-7V32M50 38v5M50 52v5M50 66v5"/><path d="M30 84h40l-4 12H34z" class="a"/>')],
+['ghost',S('<path d="M24 86V46q0-26 26-26t26 26v40l-9-8-8 8-9-8-9 8-9-8z" class="p"/><path d="M62 34l-10 18M70 44l-10 18M62 60l-6 10"/>')],
+['paper plane',S('<path d="M8 46L94 12 66 88 50 60z" class="p"/><path d="M94 12L50 60 66 88z" class="a"/><path d="M8 46l42 14M50 60l-3 26 19-14"/>')],
+['balloon',S('<path d="M50 8c-22 0-30 22-26 38 4 14 16 20 26 20s22-6 26-20c4-16-4-38-26-38z" class="a"/><path d="M46 66l4 7 4-7z" class="a"/><path d="M50 73q-9 8 0 14t0 11"/><path d="M34 32q2-9 11-11" style="stroke:var(--paper)" stroke-width="3.5"/>')],
+['lighthouse',S('<path d="M38 90l7-56h10l7 56z" class="p"/><path d="M42 62h16l1.5 12h-19z" class="a"/><rect x="41" y="22" width="18" height="12" class="p"/><path d="M38 22h24L50 10z" class="a"/><path d="M24 28h10M66 28h10M26 18l8 5M74 18l-8 5M34 90h32"/>'),1],
+['mug',S('<path d="M24 36h44v38q0 14-14 14H38q-14 0-14-14z" class="p"/><path d="M24 54h44v10H24z" class="a"/><path d="M68 46h8q10 0 10 10t-10 10h-8M38 28q-5-7 0-13M52 28q-5-7 0-13"/>')],
+['pumpkin',S('<ellipse cx="50" cy="60" rx="38" ry="28" class="a"/><path d="M50 33c-15 10-15 46 0 54M50 33c15 10 15 46 0 54M50 33q-2-12 6-16q6-2 8 2"/>')],
+['lamp post',S('<path d="M34 34h32l-6-16H40z" class="a"/><path d="M38 18h24M50 34v56M40 90h20M50 50h12q6 0 6 6"/>')],
+['umbrella',S('<path d="M12 50q0-34 38-34t38 34q-8-8-19-8t-19 8q-8-8-19-8t-19 8z" class="a"/><path d="M50 16v-6M50 46v38q0 8 8 8t8-8"/>')],
+['teapot',S('<path d="M26 60Q10 58 6 36q8 4 14 14z" class="p"/><path d="M22 56Q22 36 48 36T74 56Q74 86 48 86T22 56z" class="p"/><path d="M72 48q18-4 18 12t-16 22"/><path d="M34 38q0-8 14-8t14 8z" class="p"/><circle cx="48" cy="25" r="4" class="a"/>')],
+['lightbulb',S('<path d="M50 12c-20 0-30 14-30 28 0 12 8 18 12 26h36c4-8 12-14 12-26 0-14-10-28-30-28z" class="a"/><path d="M36 66v8h28v-8M38 82h24M42 90h16M42 40l8 14 8-14"/>')],
+['rocket',S('<path d="M42 70q8 24 16 0z" class="a"/><path d="M50 8c16 12 18 40 14 58H36C32 48 34 20 50 8z" class="p"/><circle cx="50" cy="38" r="8" class="a"/><path d="M36 54L22 72l14-4M64 54l14 18-14-4"/>')],
+['scissors',S('<path d="M40 66L68 10L58 58z" class="p"/><path d="M60 66L32 10L42 58z" class="p"/><path d="M40 66l-6 6M60 66l6 6"/><circle cx="32" cy="80" r="13" class="a"/><circle cx="32" cy="80" r="6" class="p"/><circle cx="68" cy="80" r="13" class="a"/><circle cx="68" cy="80" r="6" class="p"/><circle cx="50" cy="52" r="3.5" class="k"/>')],
+['post-it stack',S('<path d="M30 14h56v52H30z" class="p"/><path d="M22 26h56v52H22z" class="a"/><path d="M22 38h56v52H22z" class="p"/><path d="M32 52h36M32 64h26M32 76h16"/>')],
+['boot',S('<path d="M34 12h26v42l22 8q8 3 8 14v14H34z" class="p"/><path d="M34 78h56v12H34z" class="a"/><path d="M34 26h12M34 38h12"/>')],
+['key',S('<g transform="rotate(-45 50 50)"><path d="M46 36h8v54h-8z" class="p"/><path d="M54 70h10v6H54M54 82h8v6h-8"/><circle cx="50" cy="22" r="15" class="a"/><circle cx="50" cy="22" r="5" class="p"/><circle cx="50" cy="22" r="10" stroke-width="1.5"/></g>')],
+['cloud',S('<path d="M26 66q-14 0-14-14t14-14q2-18 22-18t24 16q16 2 16 16t-16 14z" class="p"/><path d="M30 76l-4 12M46 76l-4 12M62 76l-4 12"/>')],
+['house',S('<path d="M22 50L50 22l28 28v38H22z" class="p"/><path d="M14 54L50 18l36 36M64 28V16h10v22"/><rect x="42" y="62" width="16" height="26" class="a"/><rect x="28" y="54" width="10" height="10"/>')],
+['mushroom',S('<path d="M38 54v30q0 8 12 8t12-8V54z" class="p"/><path d="M14 56q0-40 36-40t36 40z" class="a"/><circle cx="36" cy="38" r="5" class="p"/><circle cx="60" cy="32" r="4" class="p"/><circle cx="68" cy="46" r="3" class="p"/>')],
+['ice cream cone',S('<path d="M30 54h40L50 95z" class="p"/><path d="M33 60L56 78M41 74L52 84M67 60L44 78M59 74L48 84"/><circle cx="50" cy="42" r="16" class="a"/><path d="M34 48q4 6 8 0t8 0t8 0t8 0"/><circle cx="50" cy="22" r="12" class="p"/><path d="M42 24l6-6M46 28l8-8" stroke-width="1.6"/>')],
+['pencil',S('<g transform="rotate(45 50 50)"><rect x="38" y="10" width="24" height="62" class="a"/><path d="M38 72l12 20 12-20z" class="p"/><path d="M45 82l5 10 5-10z" class="k"/><path d="M38 24h24"/></g>')],
+['anchor',S('<circle cx="50" cy="20" r="9" class="a"/><path d="M50 29v56M36 42h28M18 62q4 24 32 24t32-24M18 62l-6 8M82 62l6 8"/>')],
+['kite',S('<path d="M50 8l28 34-28 34-28-34z" class="a"/><path d="M50 8v68M22 42h56M50 76q-14 6-4 14t8 8"/>')],
+['watering can',S('<path d="M24 44h42v34q0 8-8 8H32q-8 0-8-8z" class="p"/><path d="M24 58h42v8H24z" class="a"/><path d="M66 62L90 38M34 44q16-22 32 0M24 50h-4q-10 0-10 12t10 12h4"/><path d="M84 32l12 12-8 4-8-8z" class="a"/>')],
+['cupcake',S('<path d="M26 56h48l-6 34H32z" class="p"/><path d="M38 58l2 30M50 58v30M62 58l-2 30"/><path d="M22 56q-4-14 8-18q-2-16 20-18q22 2 20 18q12 4 8 18z" class="a"/><circle cx="50" cy="14" r="5" class="p"/>')],
+['camera',S('<rect x="12" y="32" width="76" height="52" rx="10" class="p"/><path d="M32 32l6-12h24l6 12"/><circle cx="50" cy="58" r="17" class="a"/><circle cx="50" cy="58" r="8" class="p"/><circle cx="76" cy="44" r="3" class="k"/>')],
+['cassette tape',S('<rect x="10" y="26" width="80" height="52" rx="6" class="p"/><rect x="24" y="36" width="52" height="20" rx="4" class="a"/><circle cx="36" cy="46" r="5" class="p"/><circle cx="64" cy="46" r="5" class="p"/><path d="M30 78l6-12h28l6 12M38 66v12M62 66v12"/>')],
+['hourglass',S('<path d="M38 24h24q-2 14-12 20q-10-6-12-20zM40 82q10-14 20 0z" class="a"/><path d="M26 12h48M26 88h48M30 12q0 30 20 38q-20 8-20 38M70 12q0 30-20 38q20 8 20 38"/>')]];
+const sp=(cx,cy)=>{let d='M'+cx+' '+cy;for(let t=.6;t<=12;t+=.6)d+='L'+(cx+t*.75*Math.cos(t)).toFixed(1)+' '+(cy+t*.75*Math.sin(t)).toFixed(1);return '<path d="'+d+'" stroke-width="2"/>'};
+const EY={
+o:(x,d)=>`<ellipse cx="${x}" cy="48" rx="7.5" ry="9.5" class="p"/><ellipse cx="${x+d}" cy="49" rx="4.5" ry="6.5" class="k"/><circle cx="${x+d+1.6}" cy="46.5" r="1.7" class="p" stroke="none"/>`,
+w:(x,d)=>`<circle cx="${x}" cy="48" r="9.5" class="p"/><circle cx="${x+d}" cy="48" r="2.2" class="k"/>`,
+d:x=>`<ellipse cx="${x}" cy="49" rx="4" ry="6" class="k"/><circle cx="${x+1.4}" cy="46.8" r="1.5" class="p" stroke="none"/>`,
+u:x=>`<path d="M${x-8} 52q8-11 16 0"/>`,
+c:x=>`<path d="M${x-8} 47q8 8 16 0"/>`,
+h:x=>`<path d="M${x} 58l-9-9q-4-7 2-9 5-1 7 4 2-5 7-4 6 2 2 9z" class="a"/>`,
+s:x=>sp(x,48),
+x:x=>`<path d="M${x-6} 42l12 12M${x+6} 42l-12 12"/>`,
+l:(x,d)=>`<path d="M${x-8} 47h16q0 9-8 9t-8-9z" class="p"/><circle cx="${x+d}" cy="51" r="3" class="k"/>`};
+const BR={n:['M28 38q8-4 16 0','M56 38q8-4 16 0'],r:['M28 33q8-7 16 0','M56 33q8-7 16 0'],a:['M26 35l18 9','M74 35l-18 9'],w:['M26 43l18-9','M74 43l-18-9'],f:['M28 38h16','M56 38h16'],z:['M28 41q8-3 16 0','M56 41q8-3 16 0'],q:['M28 40q8-3 16 0','M56 33q8-8 16-2']};
+const MO={
+smile:'<path d="M36 66q14 12 28 0"/>',
+grin:'<path d="M32 62h36q-3 20-18 20t-18-20z" class="k"/><path d="M42 77q8-6 16 0q-4 5-8 5t-8-5z" class="a" stroke="none"/>',
+O:'<ellipse cx="50" cy="73" rx="5.5" ry="8" class="k"/>',
+frown:'<path d="M38 76q12-11 24 0"/>',
+flat:'<path d="M40 72h20"/>',
+wavy:'<path d="M34 72q4-5 8 0t8 0t8 0t8 0"/>',
+smirk:'<path d="M38 70q14 9 27-5"/>',
+tongue:'<path d="M34 66q16 12 32 0"/><path d="M44 74q6 12 12 0z" class="a"/>',
+wail:'<path d="M34 82q16-24 32 0z" class="k"/>',
+tiny:'<circle cx="50" cy="72" r="3" class="k"/>',
+pout:'<path d="M43 74q7-6 14 0"/>'};
+const FX={
+sw:'<path d="M86 12q-6 10 0 15q6-5 0-15z" class="a"/>',
+zz:'<path d="M80 22h8l-8 8h8M89 8h6l-6 6h6" stroke-width="2.5"/>',
+te:'<path d="M27 64q-5 9 0 14q5-5 0-14z" class="a"/>'};
+const face=f=>{const d=f[7]||0,B=BR[f[3]];return S('<circle cx="50" cy="52" r="40" class="p"/><ellipse cx="51" cy="51" rx="39" ry="40" stroke-width="1.3" opacity=".5"/>'+(f[5]?'<circle cx="25" cy="62" r="6" class="a" stroke="none" opacity=".6"/><circle cx="75" cy="62" r="6" class="a" stroke="none" opacity=".6"/>':'')+EY[f[1]](36,d)+EY[f[2]](64,d)+'<g stroke-width="'+(f[3]=='a'?4.5:3)+'"><path d="'+B[0]+'"/><path d="'+B[1]+'"/></g>'+MO[f[4]]+(FX[f[6]]||''))};
+const FACES=[
+['happy','u','u','r','grin',1,'sp'],['smug','l','l','q','smirk',0,''],['panicked','w','w','w','wavy',0,'sw',0,1],['suspicious','o','o','q','flat',0,'',5],
+['sleepy','c','c','z','tiny',0,'zz'],['delighted','o','o','r','smile',1,'sp'],['grumpy','d','d','a','frown',0,'an'],['surprised','o','o','r','O',0,'bu'],
+['winking','o','u','q','smile',1,'sp'],['dizzy','s','s','r','wavy',0,'sp'],['shy','o','o','w','pout',1,'hr',-4],['scheming','l','l','a','smirk',0,'',0,1],
+['unimpressed','l','l','f','flat',0,''],['weepy','c','c','w','wail',0,'te'],['smitten','h','h','r','smile',1,'hr',0,1],['cheeky','o','u','q','tongue',1,''],
+['furious','o','o','a','frown',0,'an'],['confused','o','o','q','flat',0,'qu',3],['serene','c','c','n','smile',1,''],['knocked out','x','x','f','O',0,''],
+['sad','d','d','w','frown',0,'te'],['excited','o','o','r','grin',1,'bu']];
+export const EXP=FACES.map(f=>[f[0],face(f),f[8]]);
+export const ACC=[
+['wearing a tiny crown',S('<path d="M22 70l-4-34 20 16 12-26 12 26 20-16-4 34z" class="a"/><path d="M22 80h56"/>'),1],
+['with a monocle',S('<circle cx="46" cy="44" r="24" class="p"/><circle cx="46" cy="44" r="16"/><path d="M62 62q12 14 4 30M34 34q6-6 12-6"/>')],
+['wearing headphones',S('<path d="M20 62Q20 20 50 20t30 42"/><rect x="12" y="56" width="16" height="28" rx="7" class="a"/><rect x="72" y="56" width="16" height="28" rx="7" class="a"/>')],
+['in a scarf',S('<path d="M16 34q34 16 68 0v18q-34 16-68 0z" class="a"/><path d="M62 54l6 34H52l-3-30M24 40v6M38 44v6M52 46v6"/>')],
+['with a bow tie',S('<path d="M50 52L16 34v36zM50 52l34-18v36z" class="a"/><circle cx="50" cy="52" r="7" class="p"/>')],
+['in a party hat',S('<path d="M50 16l28 66H22z" class="p"/><path d="M41 38h18l5 16H36z" class="a"/><circle cx="50" cy="14" r="6" class="a"/>')],
+['in sunglasses',S('<rect x="12" y="38" width="32" height="22" rx="9" class="k"/><rect x="56" y="38" width="32" height="22" rx="9" class="k"/><path d="M44 46h12M12 44l-6-6M88 44l6-6"/>')],
+['with a mustache',S('<path d="M50 48q-6-12-30-8 4 16 18 14q8-2 12-6zM50 48q6-12 30-8-4 16-18 14-8-2-12-6z" class="k"/>')],
+['in a top hat',S('<ellipse cx="50" cy="74" rx="40" ry="10" class="p"/><path d="M30 70V22q0-8 8-8h24q8 0 8 8v48q-20 9-40 0z" class="p"/><path d="M30 22q20 7 40 0"/><path d="M30 54q20 9 40 0v12q-20 9-40 0z" class="a"/><rect x="44" y="58" width="12" height="11" rx="2" class="p" stroke-width="2"/><path d="M36 30v16M41 29v18" stroke-width="1.6"/>')],
+['wearing a halo',S('<ellipse cx="50" cy="50" rx="34" ry="12" class="a"/><ellipse cx="50" cy="50" rx="20" ry="5" class="p"/>')],
+['with a flower',S('<circle cx="50" cy="26" r="13" class="p"/><circle cx="74" cy="44" r="13" class="p"/><circle cx="65" cy="72" r="13" class="p"/><circle cx="35" cy="72" r="13" class="p"/><circle cx="26" cy="44" r="13" class="p"/><circle cx="50" cy="52" r="10" class="a"/>')],
+['in a beanie',S('<path d="M20 70q0-44 30-44t30 44z" class="a"/><path d="M16 70h68v12H16z" class="p"/><path d="M26 70v12M38 70v12M50 70v12M62 70v12M74 70v12"/><circle cx="50" cy="22" r="8" class="p"/>')],
+['in a cape',S('<path d="M28 20q22-8 44 0l14 68H14z" class="a"/><path d="M28 20q22 12 44 0"/><circle cx="50" cy="26" r="5" class="p"/>')],
+['with a plaster on',S('<g transform="rotate(-20 50 50)"><rect x="10" y="34" width="80" height="32" rx="16" class="a"/><rect x="36" y="34" width="28" height="32" class="p"/><path d="M44 46h.1M52 46h.1M44 54h.1M52 54h.1" stroke-width="5"/></g>')],
+['holding a balloon',S('<path d="M50 8c-22 0-30 22-26 38 4 14 16 20 26 20s22-6 26-20c4-16-4-38-26-38z"/><path d="M46 66l4 7 4-7z"/><path d="M50 73q-9 8 0 14t0 11"/>')]];
+
+// Reel order: thing, face, extra.
+export const POOLS = [OBJ, EXP, ACC];

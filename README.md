@@ -14,6 +14,8 @@ Use `npx vercel link` followed by `npx vercel dev`. Pull development env vars wi
 
 To test boss mode without logging in, add `DOODLE_SPIN_DEV_BOSS_MODE=true` to `.env.local` and restart `vercel dev`. This bypass does not require `DOODLE_PASSWORD` or `SESSION_SECRET`. It cannot activate in a Vercel production deployment.
 
+**Shortcut:** `npm run local` loads `.env.local` into the shell and starts `vercel dev`. `vercel dev` doesn't pass `.env.local` to the API functions itself, and it skips `VERCEL_OIDC_TOKEN`/`BLOB_STORE_ID` because OIDC isn't enabled for the development environment here, so put a `BLOB_READ_WRITE_TOKEN` in `.env.local` instead.
+
 ## Notes
 - Public Blob URLs are accessible to anyone who has them. Gallery read access is public; write actions require owner login.
 - Session: signed HttpOnly SameSite=Strict cookie, valid seven days; resetting SESSION_SECRET signs out existing sessions.
@@ -21,3 +23,10 @@ To test boss mode without logging in, add `DOODLE_SPIN_DEV_BOSS_MODE=true` to `.
 - The browser can view/modify the selection sent to the server. Currently the server validates characters/length but does not strictly whitelist selections. Owner login prevents anonymous abuse; for stronger restrictions, move allowed selection lists to the backend.
 - A login password alone does not provide brute-force protection. Configure WAF rate limiting before distributing the site broadly.
 - No live Gemini or Vercel deployment test has been performed here.
+
+## Front-end layout
+One screen per step, no vertical growth: Spin → Draw → (boss) Example / Photograph → Gallery. Extra screens: Catalog, Boss login.
+- `index.html` — one `<section class="view" data-view="…">` per screen.
+- `css/style.css` — tokens, screen layout, components.
+- `js/main.js` wires everything; `router.js` (screens + browser back), `slot.js` (reels, share links), `draw.js`, `example.js`, `camera.js`, `gallery.js`, `catalog.js`, `login.js`, `auth.js`, `api.js`, `sound.js`, `art.js` (all the SVG doodle parts).
+- Uses ES modules, so serve over http (`vercel dev`), not `file://`.
