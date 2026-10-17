@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Banana pencil icon" >
+  <title>Banana pencil</title>
+  <g stroke="#111111" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Curved banana-pencil body -->
+    <path d="M145 337 C257 317 333 259 374 163 C385 137 391 112 393 92 L382 69 Q377 56 390 50 L419 41 Q429 38 438 46 L458 62 Q466 69 460 80 L448 105 C474 180 447 277 388 344 C336 404 259 433 168 444 L82 419 Z" fill="#F2A20F" stroke-width="13"/>
+    <!-- Exposed pencil wood -->
+    <path d="M145 337 L45 387 Q35 394 45 401 L82 419 L168 444 Q164 435 170 427 Q177 418 165 409 L154 400 Q149 395 157 386 Q165 379 153 372 L147 367 Q142 363 149 355 Q153 348 145 337 Z" fill="#FFE7B5" stroke-width="12"/>
+    <!-- Graphite tip -->
+    <path d="M45 387 L77 371 Q91 389 82 419 L45 401 Q35 394 45 387 Z" fill="#111111" stroke-width="5"/>
+    <!-- Stem cap -->
+    <path d="M382 69 Q403 72 420 60 Q442 57 458 62 L438 46 Q429 38 419 41 L390 50 Q377 56 382 69 Z" fill="#111111" stroke="none"/>
+    <!-- Minimal banana ridges -->
+    <path d="M165 358 C284 339 365 272 403 145 M181 418 C319 404 415 323 431 193 M418 86 L416 110" fill="none" stroke-width="10"/>
+  </g>
+</svg>

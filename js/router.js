@@ -5,12 +5,15 @@ import { $, $$ } from './dom.js';
 const views = $$('.view');
 const hooks = {};
 let current = 'home';
+let previous = null;
 
 export const currentView = () => current;
+export const previousView = () => previous;
 export const onView = (name, { enter, leave } = {}) => { hooks[name] = { enter, leave }; };
 
 function show(name) {
   hooks[current]?.leave?.();
+  previous = current;
   current = name;
   for (const view of views) {
     const active = view.dataset.view === name;

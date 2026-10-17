@@ -17,6 +17,7 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap">
 <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/gallery.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4"/></filter></svg>
@@ -40,7 +41,7 @@
     <button class="btn" id="primary" type="button">Spin!</button>
     <button class="btn alt" id="again" type="button" hidden>Spin again</button>
     <nav class="links" aria-label="More">
-      <button class="link" type="button" data-go="gallery">gallery</button>
+      <button class="link boss-only" type="button" data-go="gallery">gallery</button>
       <button class="link" type="button" data-go="catalog">all doodles</button>
       <button class="link guest-only" type="button" data-go="login">boss mode</button>
       <button class="link boss-only" type="button" id="logout">log out</button>
@@ -72,7 +73,7 @@
       <img id="example-img" alt="">
       <p id="example-caption"></p>
     </div>
-    <p class="spinner" id="example-spinner" aria-hidden="true">✎</p>
+    <img class="banana" id="example-spinner" src="/icons/banana-pencil.svg" alt="" width="140" height="140">
     <p class="status" id="example-status" role="status" aria-live="polite"></p>
   </div>
   <footer class="view-foot">
@@ -100,11 +101,46 @@
 </section>
 
 <!-- 5. Gallery -->
-<section class="view" data-view="gallery" aria-label="Gallery">
-  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Gallery</h2><button class="chip right" id="favorites" type="button">favorites</button></header>
-  <div class="view-body scroll">
-    <p class="status" id="gallery-status" role="status"></p>
-    <div id="saved-grid" class="saved-grid"></div>
+<section class="view gview" data-view="gallery" aria-label="Gallery">
+  <header class="gbar" id="g-bar">
+    <button class="ico" type="button" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <h1>Gallery</h1>
+    <button class="ico" type="button" id="g-search-open" aria-label="Search prompts"><svg viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:2.6"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></button>
+  </header>
+  <header class="gbar search" id="g-search-bar" hidden>
+    <button class="ico" type="button" id="g-search-close" aria-label="Close search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="field-wrap">
+      <label class="sr" for="g-q">Search prompts</label>
+      <input class="field" id="g-q" type="search" placeholder="search prompts" autocomplete="off" autocapitalize="off">
+      <button class="clear" type="button" id="g-q-clear" aria-label="Clear search" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </header>
+  <div class="pills" id="g-pills" role="group" aria-label="Show">
+    <button class="pill on" type="button" data-filter="all" aria-pressed="true">all</button>
+    <button class="pill" type="button" data-filter="favorites" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,3 14.8,9 21,9.6 16.3,13.8 17.8,20 12,16.7 6.2,20 7.7,13.8 3,9.6 9.2,9"/></svg>favorites</button>
+    <button class="pill" type="button" data-filter="mine" aria-pressed="false">my photos</button>
+  </div>
+  <div class="g-status" id="g-status">
+    <span class="mute" id="g-count" role="status"></span>
+    <button class="sortbtn" type="button" id="g-sort-open" aria-haspopup="dialog">newest first ▾</button>
+  </div>
+  <div class="g-scroll" id="g-scroll"></div>
+</section>
+
+<!-- 5b. Single doodle -->
+<section class="view gview" data-view="viewer" aria-label="Doodle">
+  <header class="gbar">
+    <button class="ico" type="button" data-back aria-label="Back to gallery"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="mute count" id="v-count"></span>
+    <span></span>
+  </header>
+  <div class="v-stage" id="v-stage"><div class="sheet v-sheet"><img id="v-img" alt=""></div></div>
+  <div class="v-title"><h1 id="v-title"></h1><span class="mute" id="v-meta"></span></div>
+  <div class="v-strip" id="v-strip"></div>
+  <div class="v-actions">
+    <button class="act" type="button" id="v-star" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,3 14.8,9 21,9.6 16.3,13.8 17.8,20 12,16.7 6.2,20 7.7,13.8 3,9.6 9.2,9"/></svg><span>Star</span></button>
+    <button class="act" type="button" id="v-share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M7 8l5-5 5 5M5 14v6h14v-6"/></svg>Share</button>
+    <button class="act" type="button" id="v-delete"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Delete</button>
   </div>
 </section>
 
@@ -130,6 +166,32 @@
 </section>
 
 </div>
+
+<dialog class="sort-dialog" id="sort-dialog" aria-label="Sort and group">
+  <div class="dlg-inner">
+    <div class="grab" aria-hidden="true"></div>
+    <h2>Sort</h2>
+    <div role="radiogroup" aria-label="Sort order">
+      <button class="opt" type="button" role="radio" data-sort="newest" aria-checked="true"><span class="radio"></span>newest first</button>
+      <button class="opt" type="button" role="radio" data-sort="oldest" aria-checked="false"><span class="radio"></span>oldest first</button>
+      <button class="opt" type="button" role="radio" data-sort="az" aria-checked="false"><span class="radio"></span>A to Z</button>
+      <button class="opt" type="button" role="radio" data-sort="examples" aria-checked="false"><span class="radio"></span>most examples</button>
+    </div>
+    <button class="opt switchrow" type="button" role="switch" id="group-switch" aria-checked="true">group by month<span class="switch"></span></button>
+    <button class="big" type="button" id="sort-done">Done</button>
+  </div>
+</dialog>
+
+<dialog class="delete-dialog" id="delete-dialog" role="alertdialog" aria-labelledby="del-title" aria-describedby="del-text">
+  <div class="dlg-inner">
+    <h2 id="del-title">Delete this photo?</h2>
+    <div class="body"><div class="sheet"><img id="del-img" alt=""></div><p id="del-text"></p></div>
+    <div class="dlg-buttons">
+      <button class="dbtn" type="button" id="del-keep" autofocus>Keep it</button>
+      <button class="dbtn danger" type="button" id="del-confirm">Delete</button>
+    </div>
+  </div>
+</dialog>
 <script type="module" src="/js/main.js"></script>
 </body>
 </html>

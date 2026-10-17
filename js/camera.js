@@ -2,7 +2,7 @@ import { $ } from './dom.js';
 import { post } from './api.js';
 import { go, onView } from './router.js';
 import { subject } from './slot.js';
-import { addToGallery } from './gallery.js';
+import { addItem } from './gallery-store.js';
 
 let stream = null;
 let photo = null;
@@ -42,11 +42,16 @@ async function open() {
   }
 }
 
+const MAX_SIDE = 1600; // keeps the upload comfortably under the server's 8 MB limit
+
+// Photos are saved square: crop the middle of the frame, which is what the preview shows.
 function shoot() {
   const video = $('#stage video'), canvas = $('#canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
+  const side = Math.min(video.videoWidth, video.videoHeight);
+  const size = Math.min(side, MAX_SIDE);
+  canvas.width = canvas.height = size;
+  canvas.getContext('2d').drawImage(
+    video, (video.videoWidth - side) / 2, (video.videoHeight - side) / 2, side, side, 0, 0, size, size);
   photo = canvas.toDataURL('image/jpeg', 0.9);
   stopStream();
   setStage(Object.assign(document.createElement('img'), { src: photo, alt: 'Your photo' }));
@@ -57,7 +62,7 @@ async function save() {
   $('#cam-save').disabled = true;
   $('#camera-status').textContent = 'Saving photo…';
   try {
-    addToGallery({ ...await post('/api/my-version', { image: photo, subject: subject() }), mine: true });
+    addItem({ ...await post('/api/my-version', { image: photo, subject: subject() }), mine: true });
     photo = null;
     step('saved', 'Your version is in the gallery!');
   } catch (e) {
