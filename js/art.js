@@ -1,5 +1,7 @@
 // Doodle parts: each pool item is [name, svgMarkup, ...]. Shared by the reels and the catalog.
-const S=b=>'<svg viewBox="6 6 92 92" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+b+'</svg>';
+import { S } from './svg.js';
+import { ANIMALS } from './art-animals.js';
+
 export const OBJ=[
 ['toaster',S('<path d="M36 46V34Q28 32 28 24Q28 16 38 16H62Q72 16 72 24Q72 32 64 34V46Z" class="a"/><path d="M42 42V32q-6-1-6-6q0-4 4-4h20q4 0 4 4q0 5-6 6v10" stroke-width="1.6"/><rect x="14" y="44" width="72" height="42" rx="10" class="p"/><path d="M26 44h48" stroke-width="5"/><path d="M90 58v14M86 58h6"/><circle cx="68" cy="68" r="5" class="a"/><path d="M24 86v5M76 86v5M22 78l8-8M32 78l8-8" /><path d="M24 54q0-3 4-3" stroke-width="2"/>')],
 ['cactus',S('<path d="M40 84V38q0-12 10-12t10 12v46z" class="p"/><path d="M40 62H30q-7 0-7-7V42M60 52h10q7 0 7-7V32M50 38v5M50 52v5M50 66v5"/><path d="M30 84h40l-4 12H34z" class="a"/>')],
@@ -29,7 +31,8 @@ export const OBJ=[
 ['cupcake',S('<path d="M26 56h48l-6 34H32z" class="p"/><path d="M38 58l2 30M50 58v30M62 58l-2 30"/><path d="M22 56q-4-14 8-18q-2-16 20-18q22 2 20 18q12 4 8 18z" class="a"/><circle cx="50" cy="14" r="5" class="p"/>')],
 ['camera',S('<rect x="12" y="32" width="76" height="52" rx="10" class="p"/><path d="M32 32l6-12h24l6 12"/><circle cx="50" cy="58" r="17" class="a"/><circle cx="50" cy="58" r="8" class="p"/><circle cx="76" cy="44" r="3" class="k"/>')],
 ['cassette tape',S('<rect x="10" y="26" width="80" height="52" rx="6" class="p"/><rect x="24" y="36" width="52" height="20" rx="4" class="a"/><circle cx="36" cy="46" r="5" class="p"/><circle cx="64" cy="46" r="5" class="p"/><path d="M30 78l6-12h28l6 12M38 66v12M62 66v12"/>')],
-['hourglass',S('<path d="M38 24h24q-2 14-12 20q-10-6-12-20zM40 82q10-14 20 0z" class="a"/><path d="M26 12h48M26 88h48M30 12q0 30 20 38q-20 8-20 38M70 12q0 30-20 38q20 8 20 38"/>')]];
+['hourglass',S('<path d="M38 24h24q-2 14-12 20q-10-6-12-20zM40 82q10-14 20 0z" class="a"/><path d="M26 12h48M26 88h48M30 12q0 30 20 38q-20 8-20 38M70 12q0 30-20 38q20 8 20 38"/>')],
+...ANIMALS];
 const sp=(cx,cy)=>{let d='M'+cx+' '+cy;for(let t=.6;t<=12;t+=.6)d+='L'+(cx+t*.75*Math.cos(t)).toFixed(1)+' '+(cy+t*.75*Math.sin(t)).toFixed(1);return '<path d="'+d+'" stroke-width="2"/>'};
 const EY={
 o:(x,d)=>`<ellipse cx="${x}" cy="48" rx="7.5" ry="9.5" class="p"/><ellipse cx="${x+d}" cy="49" rx="4.5" ry="6.5" class="k"/><circle cx="${x+d+1.6}" cy="46.5" r="1.7" class="p" stroke="none"/>`,
