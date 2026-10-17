@@ -6,6 +6,7 @@ import { initDraw } from './draw.js';
 import { initExample } from './example.js';
 import { initCamera } from './camera.js';
 import { initGallery } from './gallery.js';
+import { initViewer } from './viewer.js';
 import { initCatalog } from './catalog.js';
 import { initLogin } from './login.js';
 
@@ -16,11 +17,12 @@ initDraw();
 initExample();
 initCamera();
 initGallery();
+initViewer();
 initCatalog();
 initLogin();
 
 // Boss-only screens are not reachable after logging out.
-onAuthChange(boss => { if (!boss && ['example', 'camera'].includes(currentView())) go('home', { replace: true }); });
+onAuthChange(boss => { if (!boss && ['example', 'camera', 'gallery', 'viewer'].includes(currentView())) go('home', { replace: true }); });
 checkSession();
 
 // A shared link (#r=...) lands straight on the prompt.

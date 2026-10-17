@@ -25,8 +25,8 @@ To test boss mode without logging in, add `DOODLE_SPIN_DEV_BOSS_MODE=true` to `.
 - No live Gemini or Vercel deployment test has been performed here.
 
 ## Front-end layout
-One screen per step, no vertical growth: Spin → Draw → (boss) Example / Photograph → Gallery. Extra screens: Catalog, Boss login.
+One screen per step, no vertical growth: Spin → Draw → (boss) Example / Photograph → Gallery → Viewer. The gallery is boss-only in the UI (the `/api/gallery` GET itself is still public). Extra screens: Catalog, Boss login.
 - `index.html` — one `<section class="view" data-view="…">` per screen.
-- `css/style.css` — tokens, screen layout, components.
-- `js/main.js` wires everything; `router.js` (screens + browser back), `slot.js` (reels, share links), `draw.js`, `example.js`, `camera.js`, `gallery.js`, `catalog.js`, `login.js`, `auth.js`, `api.js`, `sound.js`, `art.js` (all the SVG doodle parts).
+- `css/style.css` — tokens, screen layout, components. `css/gallery.css` — gallery, viewer, sort sheet, delete dialog.
+- `js/main.js` wires everything; `router.js` (screens + browser back), `slot.js` (reels, share links), `draw.js`, `example.js`, `camera.js`, `gallery.js` (+ `gallery-store.js`, `gallery-data.js`, `gallery-sort.js`, `gallery-ui.js`), `viewer.js`, `catalog.js`, `login.js`, `auth.js`, `api.js`, `sound.js`, `art.js` (all the SVG doodle parts).
 - Uses ES modules, so serve over http (`vercel dev`), not `file://`.

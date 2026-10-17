@@ -2,7 +2,7 @@ import { $ } from './dom.js';
 import { post } from './api.js';
 import { go } from './router.js';
 import { names, subject } from './slot.js';
-import { addToGallery } from './gallery.js';
+import { addItem } from './gallery-store.js';
 
 let runId = 0;
 
@@ -32,7 +32,7 @@ async function generate() {
     setBusy(false, 'Saved to the gallery!');
     $('#example-result').hidden = false;
     $('#example-save').hidden = false;
-    addToGallery(saved);
+    addItem(saved);
   } catch (error) {
     if (id !== runId) return;
     setBusy(false, error.message);
