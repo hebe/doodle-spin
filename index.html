@@ -16,420 +16,120 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap">
-<style>
-:root{--paper:#fbf8ee;--ink:#1c1b1f;--accent:#f2a20f;--dot:#cfc8b0;--soft:#f1ebd6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#23211d;--ink:#f3eedd;--accent:#f5b13a;--dot:#4a463c;--soft:#2d2a24;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#23211d;--ink:#f3eedd;--accent:#f5b13a;--dot:#4a463c;--soft:#2d2a24;color-scheme:dark}
-*,*::before,*::after{box-sizing:inherit}
-html,body{height:100%}
-body{margin:0;background-color:var(--paper);background-image:radial-gradient(var(--dot) 1.3px,transparent 1.4px);background-size:22px 22px;color:var(--ink);font:20px/1.3 'Patrick Hand','Segoe Print','Comic Sans MS',cursive;display:flex;overflow-y:auto}
-main{margin:auto;width:min(100%,780px);padding:18px 12px 28px;text-align:center}
-h1{margin:0;font-size:clamp(36px,10vw,52px);font-weight:400;line-height:1;transform:rotate(-1.5deg)}
-h1 span{background:linear-gradient(transparent 60%,var(--accent) 60% 92%,transparent 92%);padding:0 8px}
-.sub{margin:8px 0 6px;opacity:.8}
-.machine{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 36px;gap:10px;padding:14px 10px 12px 12px;border:3px solid var(--ink);border-radius:30px 24px 32px 22px/24px 32px 22px 30px;background:var(--paper);box-shadow:6px 7px 0 var(--ink)}
-.reel{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
-.win{width:100%;aspect-ratio:1;border:3px solid var(--ink);border-radius:16px 12px 18px 12px;background:var(--soft);padding:2px;display:grid;place-items:center;overflow:hidden;color:var(--ink)}
-.win svg{width:100%;height:100%;filter:url(#wob)}
-.win.spin svg{filter:blur(2.5px);animation:jit .16s linear infinite}
-.win.land{animation:land .4s cubic-bezier(.3,1.6,.5,1)}
-.a{fill:var(--accent)}.p{fill:var(--paper)}.k{fill:currentColor}
-.hold{font:inherit;font-size:17px;padding:1px 14px;border:2px solid var(--ink);border-radius:999px;background:transparent;color:inherit;cursor:pointer}
-.hold[aria-pressed="true"]{background:var(--accent);color:#1c1b1f}
-.hold:disabled{opacity:.5;cursor:default}
-.lever{grid-column:4;align-self:center;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:none;color:inherit;cursor:pointer;transform-origin:center}
-.lever.pull{animation:pull .55s ease-in-out}
-.ball{width:30px;height:30px;border-radius:50%;background:var(--accent);border:3px solid var(--ink)}
-.stem{width:8px;height:86px;margin-top:-2px;background:var(--ink);border-radius:4px}
-#note{margin:24px auto 0;padding:12px 18px;max-width:92%;background:var(--accent);color:#1c1b1f;border:3px solid var(--ink);border-radius:6px 12px 6px 14px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1.2deg);font-size:26px;line-height:1.2}
-.big{font:inherit;font-size:28px;padding:8px 30px;border:3px solid var(--ink);border-radius:14px;background:var(--paper);color:inherit;box-shadow:4px 4px 0 var(--ink);cursor:pointer}
-.big:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
-.big:disabled{opacity:.55;cursor:default}
-button:focus-visible{outline:3px dashed var(--ink);outline-offset:3px}
-@keyframes jit{50%{transform:translateY(9px)}}
-@keyframes land{0%{transform:translateY(-14px) scale(.95)}100%{transform:none}}
-@keyframes pull{0%{transform:scaleY(1)}35%{transform:scaleY(-1)}100%{transform:scaleY(1)}}
-h2{font-weight:400;font-size:28px;margin:22px 0 10px;text-align:left}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
-.cell{display:flex;flex-direction:column;gap:2px;font-size:16px;line-height:1.1}
-.pic{aspect-ratio:1;border:2px solid var(--ink);border-radius:14px 10px 16px 10px;background:var(--soft);padding:2px;display:grid;place-items:center;color:var(--ink)}
-.pic svg{width:100%;height:100%;filter:url(#wob)}
-body.gal .machine,body.gal #note,body.gal #generate-btn,body.gal .sub{display:none}
-@media (min-width:600px){.machine{gap:18px;padding:26px 22px 22px 26px;grid-template-columns:repeat(3,minmax(0,1fr)) 54px;border-radius:40px 32px 42px 30px/32px 42px 30px 40px}.win{border-radius:24px 18px 26px 18px;padding:6px}.ball{width:44px;height:44px}.stem{width:11px;height:130px}.hold{font-size:22px;padding:2px 20px}#note{font-size:34px}.big{font-size:34px}.sub{font-size:24px}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}
-
-/* Optional AI example, in the same notebook style as the slot machine. */
-#ai-section{max-width:620px;margin:26px auto 0;text-align:center}
-#generate-status{min-height:1.3em;margin:10px 0;font-size:18px}
-#generated-result{margin:12px auto 0;padding:14px;background:var(--paper);border:3px solid var(--ink);border-radius:20px 15px 23px 16px;box-shadow:5px 5px 0 var(--ink)}
-#generated-result[hidden],#ai-section[hidden]{display:none}
-#generated-image{display:block;width:100%;height:auto;border-radius:9px;background:#fff}
-#generated-caption{margin:12px 0 4px;font-size:23px}
-#download-image{display:inline-block;margin:6px 0 4px;color:inherit;text-underline-offset:4px}
-#gallery-section[hidden],#login-form[hidden],#boss-panel[hidden]{display:none}
-#login-password{font:inherit;font-size:20px;padding:8px;width:min(100%,250px);background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:8px}
-#gallery-section{margin:28px auto;text-align:left}
-.saved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
-.saved-card{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:9px;min-width:0}
-.saved-card img{width:100%;display:block;aspect-ratio:1.3;object-fit:contain;background:#faf7ef;border-radius:9px}
-.saved-card p{font-size:18px;margin:6px 0;overflow-wrap:anywhere}
-.saved-actions{display:flex;gap:6px;flex-wrap:wrap}
-.saved-actions button,.saved-actions a{font:inherit;font-size:16px;border:2px solid var(--ink);border-radius:9px;padding:2px 8px;background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none}
-#gallery-status,#login-status{font-size:18px}
-/* Header with sound icon, lever, boss mode */
-.top{position:relative}
-.icon{position:absolute;right:2px;top:2px;width:42px;height:42px;display:grid;place-items:center;padding:0;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);cursor:pointer}
-.icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.icon .off{display:none}
-.icon[aria-pressed="true"]{opacity:.7}
-.icon[aria-pressed="true"] .on{display:none}
-.icon[aria-pressed="true"] .off{display:inline}
-.lever:disabled{cursor:default}
-#boss{margin:18px auto 0;max-width:460px}
-.link{font:inherit;font-size:19px;padding:4px 8px;border:0;background:none;color:inherit;opacity:.75;cursor:pointer;text-decoration:underline dotted;text-underline-offset:5px}
-.link:hover{opacity:1}
-#login-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-#boss-panel .big{margin-top:4px}
-</style>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4"/></filter></svg>
-<main>
-<header class="top"><h1><span>Doodle Spin</span></h1>
-<button class="icon" id="mu" type="button" aria-pressed="true" aria-label="Sound off" title="Sound on/off"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/><path class="on" d="M16 9q3 3 0 6M19 6q6 6 0 12"/><path class="off" d="M16 9l6 6M22 9l-6 6"/></svg></button></header>
-<p class="sub">Pull the lever, then draw what lands.</p>
-<div class="machine" id="m">
-<div class="reel"><div class="win" role="img" aria-label="Object"></div><button class="hold" aria-pressed="false">hold</button></div>
-<div class="reel"><div class="win" role="img" aria-label="Expression"></div><button class="hold" aria-pressed="false">hold</button></div>
-<div class="reel"><div class="win" role="img" aria-label="Accessory"></div><button class="hold" aria-pressed="false">hold</button></div>
-<button class="lever" id="lv" aria-label="Pull the lever (Space)" title="Pull (Space)"><span class="ball"></span><span class="stem"></span></button>
-</div>
-<div id="note" role="status">Pull the lever!</div>
-<div id="boss">
-<button class="link" id="share-roll" type="button">share roll</button><button class="link" id="boss-toggle" type="button">boss mode</button>
-<form id="login-form" hidden><label class="sr" for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" placeholder="password" required><button class="hold" type="submit">Unlock</button></form>
-<p id="login-status" role="status"></p>
-<div id="boss-panel" hidden>
-<button class="big" id="generate-btn" type="button">Doodle it!</button>
-<div class="links"><button class="link" id="gallery-toggle" type="button">saved gallery</button><button class="link" id="gv" type="button">all doodles</button><button class="link" id="logout-btn" type="button">log out</button></div>
-<div class="links"><button class="link" id="my-version-btn" type="button">photograph my version</button></div>
-<section id="my-version-section" hidden aria-label="Photograph my version"><video id="camera-preview" playsinline autoplay hidden style="width:min(100%,420px);border:3px solid var(--ink);border-radius:14px"></video><canvas id="camera-canvas" hidden></canvas><div class="links"><button class="hold" id="camera-start" type="button">Open camera</button><button class="hold" id="camera-capture" type="button" hidden>Take photo</button><button class="hold" id="camera-save" type="button" hidden>Save photo</button><button class="hold" id="camera-cancel" type="button" hidden>Cancel</button></div><p id="camera-status" role="status"></p></section>
-<section id="ai-section" aria-label="AI doodle">
-<p id="generate-status" role="status" aria-live="polite"></p>
-<div id="generated-result" hidden>
-<img id="generated-image" alt="AI-generated example doodle">
-<p id="generated-caption"></p>
-<a id="download-image" download="doodle-spin.png">Save doodle</a>
-</div>
+<div class="app">
+
+<!-- 1. Spin -->
+<section class="view active" data-view="home" aria-label="Spin">
+  <header class="bar"><span></span><h1 class="title"><span>Doodle Spin</span></h1>
+    <button class="icon right" id="sound" type="button" aria-pressed="true" aria-label="Sound off"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/><path class="on" d="M16 9q3 3 0 6M19 6q6 6 0 12"/><path class="off" d="M16 9l6 6M22 9l-6 6"/></svg></button></header>
+  <div class="view-body">
+    <p class="sub">Pull the lever, then draw what lands.</p>
+    <div class="machine" id="reels">
+      <div class="reel"><div class="win" role="img" aria-label="Thing"></div><button class="chip" type="button" aria-pressed="false">hold</button></div>
+      <div class="reel"><div class="win" role="img" aria-label="Face"></div><button class="chip" type="button" aria-pressed="false">hold</button></div>
+      <div class="reel"><div class="win" role="img" aria-label="Extra"></div><button class="chip" type="button" aria-pressed="false">hold</button></div>
+      <button class="lever" id="lever" type="button" aria-label="Pull the lever (Space)"><span class="ball"></span><span class="stem"></span></button>
+    </div>
+    <p class="status-line" id="note" role="status">Pull the lever!</p>
+  </div>
+  <footer class="view-foot">
+    <button class="btn" id="primary" type="button">Spin!</button>
+    <button class="btn alt" id="again" type="button" hidden>Spin again</button>
+    <nav class="links" aria-label="More">
+      <button class="link" type="button" data-go="gallery">gallery</button>
+      <button class="link" type="button" data-go="catalog">all doodles</button>
+      <button class="link guest-only" type="button" data-go="login">boss mode</button>
+      <button class="link boss-only" type="button" id="logout">log out</button>
+    </nav>
+  </footer>
 </section>
+
+<!-- 2. Draw -->
+<section class="view" data-view="draw" aria-label="Your prompt">
+  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Your prompt</h2><span></span></header>
+  <div class="view-body">
+    <p class="note big" id="sentence"></p>
+    <div class="tiles" id="tiles"></div>
+    <p class="sub">Grab some paper and a pen.</p>
+  </div>
+  <footer class="view-foot">
+    <button class="btn alt boss-only" type="button" data-go="camera">Photograph mine</button>
+    <button class="btn alt boss-only" type="button" id="make-example">Stuck? Show an example</button>
+    <button class="btn alt" type="button" id="share">Share this roll</button>
+    <button class="link" type="button" data-back>Spin again</button>
+  </footer>
+</section>
+
+<!-- 3. Example (AI) -->
+<section class="view" data-view="example" aria-label="Example">
+  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Example</h2><span></span></header>
+  <div class="view-body">
+    <div class="result card" id="example-result" hidden>
+      <img id="example-img" alt="">
+      <p id="example-caption"></p>
+    </div>
+    <p class="spinner" id="example-spinner" aria-hidden="true">✎</p>
+    <p class="status" id="example-status" role="status" aria-live="polite"></p>
+  </div>
+  <footer class="view-foot">
+    <a class="btn alt" id="example-save" download hidden>Save image</a>
+    <button class="btn" type="button" id="example-retry" hidden>Try again</button>
+    <button class="link" type="button" data-back>Back to prompt</button>
+  </footer>
+</section>
+
+<!-- 4. Camera -->
+<section class="view" data-view="camera" aria-label="Photograph your version">
+  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Your version</h2><span></span></header>
+  <div class="view-body">
+    <div class="stage" id="stage"><p id="stage-hint">Draw it on paper, then snap it.</p></div>
+    <canvas id="canvas" hidden></canvas>
+    <p class="status" id="camera-status" role="status"></p>
+  </div>
+  <footer class="view-foot">
+    <button class="btn" type="button" id="cam-open">Open camera</button>
+    <button class="btn" type="button" id="cam-shoot" hidden>Take photo</button>
+    <button class="btn" type="button" id="cam-save" hidden>Save to gallery</button>
+    <button class="btn alt" type="button" id="cam-retake" hidden>Retake</button>
+    <button class="btn" type="button" id="cam-gallery" hidden>See gallery</button>
+  </footer>
+</section>
+
+<!-- 5. Gallery -->
+<section class="view" data-view="gallery" aria-label="Gallery">
+  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Gallery</h2><button class="chip right" id="favorites" type="button">favorites</button></header>
+  <div class="view-body scroll">
+    <p class="status" id="gallery-status" role="status"></p>
+    <div id="saved-grid" class="saved-grid"></div>
+  </div>
+</section>
+
+<!-- 6. Catalog -->
+<section class="view" data-view="catalog" aria-label="All doodles">
+  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>All doodles</h2><span></span></header>
+  <div class="tabs" id="catalog-tabs" role="group" aria-label="Category"></div>
+  <div class="view-body scroll" id="catalog-body"></div>
+</section>
+
+<!-- 7. Boss login -->
+<section class="view" data-view="login" aria-label="Boss mode">
+  <header class="bar"><button class="icon" data-back aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Boss mode</h2><span></span></header>
+  <div class="view-body">
+    <p class="sub">Unlock to make examples, photograph your drawings and manage the gallery.</p>
+    <form class="login" id="login-form">
+      <label class="sr" for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="password" required>
+      <button class="btn" type="submit">Unlock</button>
+      <p class="status" id="login-status" role="status"></p>
+    </form>
+  </div>
+</section>
+
 </div>
-</div>
-<section id="gallery-section" hidden><h2>Saved doodles <button class="hold" id="favorites-only" aria-pressed="false">All</button></h2><p id="gallery-status" role="status"></p><div id="saved-grid" class="saved-grid"></div></section>
-<section id="gal" hidden></section>
-</main>
-<script>
-const S=b=>'<svg viewBox="6 6 92 92" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+b+'</svg>';
-const F=(e,b,m)=>S('<circle cx="50" cy="52" r="40" class="p"/><circle cx="24" cy="62" r="5" class="a" stroke="none"/><circle cx="76" cy="62" r="5" class="a" stroke="none"/>'+e+b+m);
-const OBJ=[
-['toaster',S('<path d="M36 46V34Q28 32 28 24Q28 16 38 16H62Q72 16 72 24Q72 32 64 34V46Z" class="a"/><path d="M42 42V32q-6-1-6-6q0-4 4-4h20q4 0 4 4q0 5-6 6v10" stroke-width="1.6"/><rect x="14" y="44" width="72" height="42" rx="10" class="p"/><path d="M26 44h48" stroke-width="5"/><path d="M90 58v14M86 58h6"/><circle cx="68" cy="68" r="5" class="a"/><path d="M24 86v5M76 86v5M22 78l8-8M32 78l8-8" /><path d="M24 54q0-3 4-3" stroke-width="2"/>')],
-['cactus',S('<path d="M40 84V38q0-12 10-12t10 12v46z" class="p"/><path d="M40 62H30q-7 0-7-7V42M60 52h10q7 0 7-7V32M50 38v5M50 52v5M50 66v5"/><path d="M30 84h40l-4 12H34z" class="a"/>')],
-['ghost',S('<path d="M24 86V46q0-26 26-26t26 26v40l-9-8-8 8-9-8-9 8-9-8z" class="p"/><path d="M62 34l-10 18M70 44l-10 18M62 60l-6 10"/>')],
-['paper plane',S('<path d="M8 46L94 12 66 88 50 60z" class="p"/><path d="M94 12L50 60 66 88z" class="a"/><path d="M8 46l42 14M50 60l-3 26 19-14"/>')],
-['balloon',S('<path d="M50 8c-22 0-30 22-26 38 4 14 16 20 26 20s22-6 26-20c4-16-4-38-26-38z" class="a"/><path d="M46 66l4 7 4-7z" class="a"/><path d="M50 73q-9 8 0 14t0 11"/><path d="M34 32q2-9 11-11" style="stroke:var(--paper)" stroke-width="3.5"/>')],
-['lighthouse',S('<path d="M38 90l7-56h10l7 56z" class="p"/><path d="M42 62h16l1.5 12h-19z" class="a"/><rect x="41" y="22" width="18" height="12" class="p"/><path d="M38 22h24L50 10z" class="a"/><path d="M24 28h10M66 28h10M26 18l8 5M74 18l-8 5M34 90h32"/>'),1],
-['mug',S('<path d="M24 36h44v38q0 14-14 14H38q-14 0-14-14z" class="p"/><path d="M24 54h44v10H24z" class="a"/><path d="M68 46h8q10 0 10 10t-10 10h-8M38 28q-5-7 0-13M52 28q-5-7 0-13"/>')],
-['pumpkin',S('<ellipse cx="50" cy="60" rx="38" ry="28" class="a"/><path d="M50 33c-15 10-15 46 0 54M50 33c15 10 15 46 0 54M50 33q-2-12 6-16q6-2 8 2"/>')],
-['lamp post',S('<path d="M34 34h32l-6-16H40z" class="a"/><path d="M38 18h24M50 34v56M40 90h20M50 50h12q6 0 6 6"/>')],
-['umbrella',S('<path d="M12 50q0-34 38-34t38 34q-8-8-19-8t-19 8q-8-8-19-8t-19 8z" class="a"/><path d="M50 16v-6M50 46v38q0 8 8 8t8-8"/>')],
-['teapot',S('<path d="M26 60Q10 58 6 36q8 4 14 14z" class="p"/><path d="M22 56Q22 36 48 36T74 56Q74 86 48 86T22 56z" class="p"/><path d="M72 48q18-4 18 12t-16 22"/><path d="M34 38q0-8 14-8t14 8z" class="p"/><circle cx="48" cy="25" r="4" class="a"/>')],
-['lightbulb',S('<path d="M50 12c-20 0-30 14-30 28 0 12 8 18 12 26h36c4-8 12-14 12-26 0-14-10-28-30-28z" class="a"/><path d="M36 66v8h28v-8M38 82h24M42 90h16M42 40l8 14 8-14"/>')],
-['rocket',S('<path d="M42 70q8 24 16 0z" class="a"/><path d="M50 8c16 12 18 40 14 58H36C32 48 34 20 50 8z" class="p"/><circle cx="50" cy="38" r="8" class="a"/><path d="M36 54L22 72l14-4M64 54l14 18-14-4"/>')],
-['scissors',S('<path d="M40 66L68 10L58 58z" class="p"/><path d="M60 66L32 10L42 58z" class="p"/><path d="M40 66l-6 6M60 66l6 6"/><circle cx="32" cy="80" r="13" class="a"/><circle cx="32" cy="80" r="6" class="p"/><circle cx="68" cy="80" r="13" class="a"/><circle cx="68" cy="80" r="6" class="p"/><circle cx="50" cy="52" r="3.5" class="k"/>')],
-['post-it stack',S('<path d="M30 14h56v52H30z" class="p"/><path d="M22 26h56v52H22z" class="a"/><path d="M22 38h56v52H22z" class="p"/><path d="M32 52h36M32 64h26M32 76h16"/>')],
-['boot',S('<path d="M34 12h26v42l22 8q8 3 8 14v14H34z" class="p"/><path d="M34 78h56v12H34z" class="a"/><path d="M34 26h12M34 38h12"/>')],
-['key',S('<g transform="rotate(-45 50 50)"><path d="M46 36h8v54h-8z" class="p"/><path d="M54 70h10v6H54M54 82h8v6h-8"/><circle cx="50" cy="22" r="15" class="a"/><circle cx="50" cy="22" r="5" class="p"/><circle cx="50" cy="22" r="10" stroke-width="1.5"/></g>')],
-['cloud',S('<path d="M26 66q-14 0-14-14t14-14q2-18 22-18t24 16q16 2 16 16t-16 14z" class="p"/><path d="M30 76l-4 12M46 76l-4 12M62 76l-4 12"/>')],
-['house',S('<path d="M22 50L50 22l28 28v38H22z" class="p"/><path d="M14 54L50 18l36 36M64 28V16h10v22"/><rect x="42" y="62" width="16" height="26" class="a"/><rect x="28" y="54" width="10" height="10"/>')],
-['mushroom',S('<path d="M38 54v30q0 8 12 8t12-8V54z" class="p"/><path d="M14 56q0-40 36-40t36 40z" class="a"/><circle cx="36" cy="38" r="5" class="p"/><circle cx="60" cy="32" r="4" class="p"/><circle cx="68" cy="46" r="3" class="p"/>')],
-['ice cream cone',S('<path d="M30 54h40L50 95z" class="p"/><path d="M33 60L56 78M41 74L52 84M67 60L44 78M59 74L48 84"/><circle cx="50" cy="42" r="16" class="a"/><path d="M34 48q4 6 8 0t8 0t8 0t8 0"/><circle cx="50" cy="22" r="12" class="p"/><path d="M42 24l6-6M46 28l8-8" stroke-width="1.6"/>')],
-['pencil',S('<g transform="rotate(45 50 50)"><rect x="38" y="10" width="24" height="62" class="a"/><path d="M38 72l12 20 12-20z" class="p"/><path d="M45 82l5 10 5-10z" class="k"/><path d="M38 24h24"/></g>')],
-['anchor',S('<circle cx="50" cy="20" r="9" class="a"/><path d="M50 29v56M36 42h28M18 62q4 24 32 24t32-24M18 62l-6 8M82 62l6 8"/>')],
-['kite',S('<path d="M50 8l28 34-28 34-28-34z" class="a"/><path d="M50 8v68M22 42h56M50 76q-14 6-4 14t8 8"/>')],
-['watering can',S('<path d="M24 44h42v34q0 8-8 8H32q-8 0-8-8z" class="p"/><path d="M24 58h42v8H24z" class="a"/><path d="M66 62L90 38M34 44q16-22 32 0M24 50h-4q-10 0-10 12t10 12h4"/><path d="M84 32l12 12-8 4-8-8z" class="a"/>')],
-['cupcake',S('<path d="M26 56h48l-6 34H32z" class="p"/><path d="M38 58l2 30M50 58v30M62 58l-2 30"/><path d="M22 56q-4-14 8-18q-2-16 20-18q22 2 20 18q12 4 8 18z" class="a"/><circle cx="50" cy="14" r="5" class="p"/>')],
-['camera',S('<rect x="12" y="32" width="76" height="52" rx="10" class="p"/><path d="M32 32l6-12h24l6 12"/><circle cx="50" cy="58" r="17" class="a"/><circle cx="50" cy="58" r="8" class="p"/><circle cx="76" cy="44" r="3" class="k"/>')],
-['cassette tape',S('<rect x="10" y="26" width="80" height="52" rx="6" class="p"/><rect x="24" y="36" width="52" height="20" rx="4" class="a"/><circle cx="36" cy="46" r="5" class="p"/><circle cx="64" cy="46" r="5" class="p"/><path d="M30 78l6-12h28l6 12M38 66v12M62 66v12"/>')],
-['hourglass',S('<path d="M38 24h24q-2 14-12 20q-10-6-12-20zM40 82q10-14 20 0z" class="a"/><path d="M26 12h48M26 88h48M30 12q0 30 20 38q-20 8-20 38M70 12q0 30-20 38q20 8 20 38"/>')]];
-const sp=(cx,cy)=>{let d='M'+cx+' '+cy;for(let t=.6;t<=12;t+=.6)d+='L'+(cx+t*.75*Math.cos(t)).toFixed(1)+' '+(cy+t*.75*Math.sin(t)).toFixed(1);return '<path d="'+d+'" stroke-width="2"/>'};
-const EY={
-o:(x,d)=>`<ellipse cx="${x}" cy="48" rx="7.5" ry="9.5" class="p"/><ellipse cx="${x+d}" cy="49" rx="4.5" ry="6.5" class="k"/><circle cx="${x+d+1.6}" cy="46.5" r="1.7" class="p" stroke="none"/>`,
-w:(x,d)=>`<circle cx="${x}" cy="48" r="9.5" class="p"/><circle cx="${x+d}" cy="48" r="2.2" class="k"/>`,
-d:x=>`<ellipse cx="${x}" cy="49" rx="4" ry="6" class="k"/><circle cx="${x+1.4}" cy="46.8" r="1.5" class="p" stroke="none"/>`,
-u:x=>`<path d="M${x-8} 52q8-11 16 0"/>`,
-c:x=>`<path d="M${x-8} 47q8 8 16 0"/>`,
-h:x=>`<path d="M${x} 58l-9-9q-4-7 2-9 5-1 7 4 2-5 7-4 6 2 2 9z" class="a"/>`,
-s:x=>sp(x,48),
-x:x=>`<path d="M${x-6} 42l12 12M${x+6} 42l-12 12"/>`,
-l:(x,d)=>`<path d="M${x-8} 47h16q0 9-8 9t-8-9z" class="p"/><circle cx="${x+d}" cy="51" r="3" class="k"/>`};
-const BR={n:['M28 38q8-4 16 0','M56 38q8-4 16 0'],r:['M28 33q8-7 16 0','M56 33q8-7 16 0'],a:['M26 35l18 9','M74 35l-18 9'],w:['M26 43l18-9','M74 43l-18-9'],f:['M28 38h16','M56 38h16'],z:['M28 41q8-3 16 0','M56 41q8-3 16 0'],q:['M28 40q8-3 16 0','M56 33q8-8 16-2']};
-const MO={
-smile:'<path d="M36 66q14 12 28 0"/>',
-grin:'<path d="M32 62h36q-3 20-18 20t-18-20z" class="k"/><path d="M42 77q8-6 16 0q-4 5-8 5t-8-5z" class="a" stroke="none"/>',
-O:'<ellipse cx="50" cy="73" rx="5.5" ry="8" class="k"/>',
-frown:'<path d="M38 76q12-11 24 0"/>',
-flat:'<path d="M40 72h20"/>',
-wavy:'<path d="M34 72q4-5 8 0t8 0t8 0t8 0"/>',
-smirk:'<path d="M38 70q14 9 27-5"/>',
-tongue:'<path d="M34 66q16 12 32 0"/><path d="M44 74q6 12 12 0z" class="a"/>',
-wail:'<path d="M34 82q16-24 32 0z" class="k"/>',
-tiny:'<circle cx="50" cy="72" r="3" class="k"/>',
-pout:'<path d="M43 74q7-6 14 0"/>'};
-const FX={
-sw:'<path d="M86 12q-6 10 0 15q6-5 0-15z" class="a"/>',
-zz:'<path d="M80 22h8l-8 8h8M89 8h6l-6 6h6" stroke-width="2.5"/>',
-te:'<path d="M27 64q-5 9 0 14q5-5 0-14z" class="a"/>'};
-const face=f=>{const d=f[7]||0,B=BR[f[3]];return S('<circle cx="50" cy="52" r="40" class="p"/><ellipse cx="51" cy="51" rx="39" ry="40" stroke-width="1.3" opacity=".5"/>'+(f[5]?'<circle cx="25" cy="62" r="6" class="a" stroke="none" opacity=".6"/><circle cx="75" cy="62" r="6" class="a" stroke="none" opacity=".6"/>':'')+EY[f[1]](36,d)+EY[f[2]](64,d)+'<g stroke-width="'+(f[3]=='a'?4.5:3)+'"><path d="'+B[0]+'"/><path d="'+B[1]+'"/></g>'+MO[f[4]]+(FX[f[6]]||''))};
-const FACES=[
-['happy','u','u','r','grin',1,'sp'],['smug','l','l','q','smirk',0,''],['panicked','w','w','w','wavy',0,'sw',0,1],['suspicious','o','o','q','flat',0,'',5],
-['sleepy','c','c','z','tiny',0,'zz'],['delighted','o','o','r','smile',1,'sp'],['grumpy','d','d','a','frown',0,'an'],['surprised','o','o','r','O',0,'bu'],
-['winking','o','u','q','smile',1,'sp'],['dizzy','s','s','r','wavy',0,'sp'],['shy','o','o','w','pout',1,'hr',-4],['scheming','l','l','a','smirk',0,'',0,1],
-['unimpressed','l','l','f','flat',0,''],['weepy','c','c','w','wail',0,'te'],['smitten','h','h','r','smile',1,'hr',0,1],['cheeky','o','u','q','tongue',1,''],
-['furious','o','o','a','frown',0,'an'],['confused','o','o','q','flat',0,'qu',3],['serene','c','c','n','smile',1,''],['knocked out','x','x','f','O',0,''],
-['sad','d','d','w','frown',0,'te'],['excited','o','o','r','grin',1,'bu']];
-const EXP=FACES.map(f=>[f[0],face(f),f[8]]);
-const ACC=[
-['wearing a tiny crown',S('<path d="M22 70l-4-34 20 16 12-26 12 26 20-16-4 34z" class="a"/><path d="M22 80h56"/>'),1],
-['with a monocle',S('<circle cx="46" cy="44" r="24" class="p"/><circle cx="46" cy="44" r="16"/><path d="M62 62q12 14 4 30M34 34q6-6 12-6"/>')],
-['wearing headphones',S('<path d="M20 62Q20 20 50 20t30 42"/><rect x="12" y="56" width="16" height="28" rx="7" class="a"/><rect x="72" y="56" width="16" height="28" rx="7" class="a"/>')],
-['in a scarf',S('<path d="M16 34q34 16 68 0v18q-34 16-68 0z" class="a"/><path d="M62 54l6 34H52l-3-30M24 40v6M38 44v6M52 46v6"/>')],
-['with a bow tie',S('<path d="M50 52L16 34v36zM50 52l34-18v36z" class="a"/><circle cx="50" cy="52" r="7" class="p"/>')],
-['in a party hat',S('<path d="M50 16l28 66H22z" class="p"/><path d="M41 38h18l5 16H36z" class="a"/><circle cx="50" cy="14" r="6" class="a"/>')],
-['in sunglasses',S('<rect x="12" y="38" width="32" height="22" rx="9" class="k"/><rect x="56" y="38" width="32" height="22" rx="9" class="k"/><path d="M44 46h12M12 44l-6-6M88 44l6-6"/>')],
-['with a mustache',S('<path d="M50 48q-6-12-30-8 4 16 18 14q8-2 12-6zM50 48q6-12 30-8-4 16-18 14-8-2-12-6z" class="k"/>')],
-['in a top hat',S('<ellipse cx="50" cy="74" rx="40" ry="10" class="p"/><path d="M30 70V22q0-8 8-8h24q8 0 8 8v48q-20 9-40 0z" class="p"/><path d="M30 22q20 7 40 0"/><path d="M30 54q20 9 40 0v12q-20 9-40 0z" class="a"/><rect x="44" y="58" width="12" height="11" rx="2" class="p" stroke-width="2"/><path d="M36 30v16M41 29v18" stroke-width="1.6"/>')],
-['wearing a halo',S('<ellipse cx="50" cy="50" rx="34" ry="12" class="a"/><ellipse cx="50" cy="50" rx="20" ry="5" class="p"/>')],
-['with a flower',S('<circle cx="50" cy="26" r="13" class="p"/><circle cx="74" cy="44" r="13" class="p"/><circle cx="65" cy="72" r="13" class="p"/><circle cx="35" cy="72" r="13" class="p"/><circle cx="26" cy="44" r="13" class="p"/><circle cx="50" cy="52" r="10" class="a"/>')],
-['in a beanie',S('<path d="M20 70q0-44 30-44t30 44z" class="a"/><path d="M16 70h68v12H16z" class="p"/><path d="M26 70v12M38 70v12M50 70v12M62 70v12M74 70v12"/><circle cx="50" cy="22" r="8" class="p"/>')],
-['in a cape',S('<path d="M28 20q22-8 44 0l14 68H14z" class="a"/><path d="M28 20q22 12 44 0"/><circle cx="50" cy="26" r="5" class="p"/>')],
-['with a plaster on',S('<g transform="rotate(-20 50 50)"><rect x="10" y="34" width="80" height="32" rx="16" class="a"/><rect x="36" y="34" width="28" height="32" class="p"/><path d="M44 46h.1M52 46h.1M44 54h.1M52 54h.1" stroke-width="5"/></g>')],
-['holding a balloon',S('<path d="M50 8c-22 0-30 22-26 38 4 14 16 20 26 20s22-6 26-20c4-16-4-38-26-38z"/><path d="M46 66l4 7 4-7z"/><path d="M50 73q-9 8 0 14t0 11"/>')]];
-const R=[OBJ,EXP,ACC],$=s=>document.querySelector(s),wins=[...document.querySelectorAll('.win')],holds=[...document.querySelectorAll('.reel .hold')];
-const rnd=n=>Math.random()*n|0,held=i=>holds[i].getAttribute('aria-pressed')==='true';
-let cur=R.map(a=>rnd(a.length)),busy=false,mute=true,ac=null;
-const show=(i,k)=>{wins[i].innerHTML=R[i][k][1]};
-const slug=s=>s.toLowerCase().replace(/\s+/g,'-');
-const sentence=()=>{const n=[0,1,2].map(i=>R[i][cur[i]][0]);return 'Draw '+(/^[aeiou]/.test(n[1][0])?'an ':'a ')+n[1]+' '+n[0]+' '+n[2]};
-function shareUrl(){const parts=cur.map((k,i)=>slug(R[i][k][0]));return location.origin+location.pathname+location.search+'#r='+parts.join('.')}
-function applyRollHash(){
- const match=location.hash.match(/^#r=([^.]*)\.([^.]*)\.([^.]*)$/);
- let slugs=[];try{slugs=match?match.slice(1).map(decodeURIComponent):[]}catch{slugs=[]}
- cur=R.map((pool,i)=>{const found=slugs[i]?pool.findIndex(item=>slug(item[0])===slugs[i]): -1;return found<0?rnd(pool.length):found});
- cur.forEach((k,i)=>show(i,k));$('#note').textContent=sentence();
-}
-function updateRollUrl(){history.replaceState(null,'',shareUrl())}
-function tone(f,d,t,v,w){if(mute||!ac)return;try{const o=ac.createOscillator(),g=ac.createGain(),s=ac.currentTime+(w||0);o.type=t||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.06,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(ac.destination);o.start(s);o.stop(s+d)}catch(e){}}
-function setBusy(b){busy=b;$('#lv').disabled=b;holds.forEach(h=>h.disabled=b);if(!generating)$('#generate-btn').disabled=b}
-function done(){
- setBusy(false);
- $('#note').textContent=sentence();
- updateRollUrl();
-}
-function pull(){
- if(busy)return;
- if(holds.every((h,i)=>held(i))){$('#note').textContent='Unhold a reel to spin.';return}
- try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(e){}
- setBusy(true);
- const lv=$('#lv');lv.classList.remove('pull');void lv.offsetWidth;lv.classList.add('pull');
- $('#note').textContent='Spinning\u2026';
- tone(140,.2,'square',.04);
- const first=[0,1,2].find(i=>!held(i));let left=[0,1,2].filter(i=>!held(i)).length;
- [0,1,2].forEach(i=>{
-  if(held(i))return;
-  const w=wins[i],target=rnd(R[i].length);w.classList.add('spin');
-  const iv=setInterval(()=>{show(i,rnd(R[i].length));if(i===first)tone(650+rnd(350),.03,'triangle',.025)},75);
-  setTimeout(()=>{
-   clearInterval(iv);cur[i]=target;show(i,target);w.classList.remove('spin');w.classList.add('land');
-   setTimeout(()=>w.classList.remove('land'),420);
-   tone(150,.18,'square',.05);tone(330*[1,1.25,1.5][i],.3,'sine',.08);
-   if(--left===0)done();
-  },850+i*420+rnd(200));
- });
-}
-holds.forEach(h=>h.addEventListener('click',()=>{const on=!held(holds.indexOf(h));h.setAttribute('aria-pressed',on);h.textContent=on?'held':'hold';tone(on?520:380,.08,'triangle',.04)}));
-$('#lv').addEventListener('click',pull);
-$('#mu').addEventListener('click',e=>{mute=!mute;const b=e.currentTarget;b.setAttribute('aria-pressed',mute);b.setAttribute('aria-label',mute?'Sound off':'Sound on');if(!mute){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(x){}tone(520,.08,'triangle',.05)}});
-document.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target===document.body){e.preventDefault();pull()}});
-function buildGal(){$('#gal').innerHTML=[['Things',0],['Faces',1],['Extras',2]].map(t=>'<h2>'+t[0]+' ('+R[t[1]].length+')</h2><div class="grid">'+R[t[1]].map(x=>'<div class="cell"><div class="pic">'+x[1]+'</div><span>'+x[0]+'</span></div>').join('')+'</div>').join('')}
-// Keep the built-in doodle catalog and saved gallery mutually exclusive.
-function closeSavedGallery(){
-  $('#gallery-section').hidden=true;
-  $('#gallery-toggle').textContent='saved gallery';
-}
-function closeDoodleCatalog(){
-  document.body.classList.remove('gal');
-  $('#gal').hidden=true;
-  $('#ai-section').hidden=false;
-  $('#gv').textContent='all doodles';
-}
-$('#gv').addEventListener('click',()=>{
-  const opening=!document.body.classList.contains('gal');
-  closeSavedGallery();
-  if(opening){
-    document.body.classList.add('gal');
-    $('#gal').hidden=false;
-    $('#ai-section').hidden=true;
-    $('#gv').textContent='back to slot';
-    if(!$('#gal').innerHTML)buildGal();
-  }else{
-    closeDoodleCatalog();
-  }
-  window.scrollTo(0,0);
-});
-
-let generating = false;
-let signedIn = false;
-let galleryItems = [];
-let favoritesOnly = false;
-
-function getDoodleParts() { return [0,1,2].map(i=>R[i][cur[i]][0]); }
-async function apiJson(path, options={}) {
-  const response = await fetch(path,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});
-  const result=await response.json().catch(()=>({}));
-  if(!response.ok) throw new Error(result.error||`Request failed (${response.status})`);
-  return result;
-}
-function refreshAuthUi() {
-  $('#boss-panel').hidden=!signedIn;
-  $('#boss-toggle').hidden=signedIn;
-  if(signedIn)$('#login-form').hidden=true;
-  renderSaved();
-}
-function toggleLogin(show) {$('#login-form').hidden=!show; if(show) $('#login-password').focus();}
-$('#boss-toggle').addEventListener('click',()=>toggleLogin($('#login-form').hidden));
-$('#login-form').addEventListener('submit',async e=>{
-  e.preventDefault();
-  $('#login-status').textContent='Signing in...';
-  try {
-    await apiJson('/api/auth',{method:'POST',body:JSON.stringify({password:$('#login-password').value})});
-    signedIn=true; $('#login-password').value=''; toggleLogin(false); $('#login-status').textContent='';refreshAuthUi();
-  }catch(error){$('#login-status').textContent=error.message;}
-});
-$('#logout-btn').addEventListener('click',async()=>{
-  try {await apiJson('/api/auth',{method:'DELETE'});}catch(e){console.error(e);}
-  signedIn=false;
-  closeSavedGallery();
-  closeDoodleCatalog();
-  $('#generated-result').hidden=true;$('#generate-status').textContent='';
-  refreshAuthUi();
-});
-
-async function generateDoodle() {
-  if(busy||generating)return;
-  if(!signedIn){toggleLogin(true);return;}
-  const [object,expression,accessory]=getDoodleParts();
-  const subject=`${expression} ${object} ${accessory}`;
-  generating=true;
-  $('#generate-btn').disabled=true;
-  $('#generate-btn').textContent='Drawing...';
-  $('#generate-status').textContent='Nano Banana is scribbling and saving...';
-  try {
-    const saved=await apiJson('/api/generate',{method:'POST',body:JSON.stringify({object,expression,accessory})});
-    $('#generated-image').src=saved.url;
-    $('#generated-image').alt=`Example doodle: ${subject}`;
-    $('#generated-caption').textContent=subject;
-    $('#download-image').href=saved.url;
-    $('#download-image').download=`doodle-spin-${saved.id}.png`;
-    $('#generated-result').hidden=false;
-    $('#generate-status').textContent='Saved to gallery!';
-    if(!$('#gallery-section').hidden) await loadGallery();
-  }catch(error){$('#generate-status').textContent=error.message;}
-  finally {generating=false;$('#generate-btn').disabled=busy;$('#generate-btn').textContent='Doodle it!';refreshAuthUi();}
-}
-$('#generate-btn').addEventListener('click',generateDoodle);
-
-function renderSaved(){
-  const parent=$('#saved-grid'); parent.replaceChildren();
-  const items=galleryItems.filter(x=>!favoritesOnly||x.favorite);
-  if(!items.length){$('#gallery-status').textContent=galleryItems.length?'No favorites yet.':'No saved doodles yet.';return;}
-  $('#gallery-status').textContent=`${items.length} doodle${items.length===1?'':'s'}`;
-  for(const item of items){
-    const card=document.createElement('article');card.className='saved-card';
-    const img=document.createElement('img');img.src=item.url;img.alt=item.subject;img.loading='lazy';card.append(img);
-    const title=document.createElement('p');title.textContent=item.subject.startsWith('My version: ')?item.subject.slice(12):item.subject;card.append(title);
-    const actions=document.createElement('div');actions.className='saved-actions';
-    const save=document.createElement('a');save.href=item.url;save.target='_blank';save.rel='noopener noreferrer';save.textContent='Open';actions.append(save);
-    if(signedIn){
-      const star=document.createElement('button');star.type='button';star.textContent=item.favorite?'★ Starred':'☆ Star';
-      star.addEventListener('click',async()=>{
-        star.disabled=true;
-        try{await apiJson('/api/gallery',{method:'PATCH',body:JSON.stringify({id:item.id,favorite:!item.favorite})});item.favorite=!item.favorite;renderSaved();}
-        catch(e){alert(e.message);star.disabled=false;}
-      });actions.append(star);
-      const remove=document.createElement('button');remove.type='button';remove.textContent='Delete';
-      remove.addEventListener('click',async()=>{
-        if(!confirm(`Delete "${item.subject}" permanently?`))return;
-        remove.disabled=true;
-        try{await apiJson('/api/gallery',{method:'DELETE',body:JSON.stringify({id:item.id})});galleryItems=galleryItems.filter(x=>x.id!==item.id);renderSaved();}
-        catch(e){alert(e.message);remove.disabled=false;}
-      });actions.append(remove);
-    }
-    card.append(actions);parent.append(card);
-  }
-}
-async function loadGallery(){
-  $('#gallery-status').textContent='Loading doodles...';
-  try {galleryItems=(await apiJson('/api/gallery')).items;renderSaved();}
-  catch(e){$('#gallery-status').textContent=e.message;}
-}
-$('#gallery-toggle').addEventListener('click',()=>{
-  const opening=$('#gallery-section').hidden;
-  closeDoodleCatalog();
-  if(opening){
-    $('#gallery-section').hidden=false;
-    $('#gallery-toggle').textContent='hide gallery';
-    loadGallery();
-  }else{
-    closeSavedGallery();
-  }
-});
-$('#favorites-only').addEventListener('click',()=>{
-  favoritesOnly=!favoritesOnly;
-  $('#favorites-only').textContent=favoritesOnly?'★ Favorites':'All';
-  $('#favorites-only').setAttribute('aria-pressed',String(favoritesOnly));renderSaved();
-});
-apiJson('/api/auth').then(x=>{signedIn=x.signedIn;refreshAuthUi();}).catch(()=>refreshAuthUi());
-
-$('#share-roll').addEventListener('click',async()=>{
- const url=shareUrl(),button=$('#share-roll'),shareText=sentence();
- if(navigator.share){try{await navigator.share({title:'Doodle Spin',text:shareText,url});return}catch(e){if(e.name==='AbortError')return}}
- try{await navigator.clipboard.writeText(url);button.textContent='link copied';setTimeout(()=>{button.textContent='share roll'},1500)}
- catch(e){window.prompt('Copy this link to share your roll:',url)}
-});
-window.addEventListener('hashchange',()=>{applyRollHash()});
-
-let cameraStream=null,capturedPhoto=null;
-const stopCamera=()=>{cameraStream?.getTracks().forEach(t=>t.stop());cameraStream=null;$('#camera-preview').srcObject=null};
-$('#my-version-btn').addEventListener('click',()=>{
- if(!signedIn){toggleLogin(true);return}
- const section=$('#my-version-section');section.hidden=!section.hidden;
-});
-$('#camera-start').addEventListener('click',async()=>{
- try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});$('#camera-preview').srcObject=cameraStream;$('#camera-preview').hidden=false;$('#camera-capture').hidden=false;$('#camera-cancel').hidden=false;$('#camera-status').textContent='Frame your drawing, then take a photo.'}
- catch(e){$('#camera-status').textContent='Could not open the camera. Check camera permission and try again.'}
-});
-$('#camera-capture').addEventListener('click',()=>{const v=$('#camera-preview'),c=$('#camera-canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);capturedPhoto=c.toDataURL('image/jpeg',.9);stopCamera();v.hidden=true;$('#camera-capture').hidden=true;$('#camera-save').hidden=false;$('#camera-status').textContent='Photo ready to save.'});
-$('#camera-save').addEventListener('click',async()=>{
- if(!signedIn||!capturedPhoto)return;
- $('#camera-save').disabled=true;$('#camera-status').textContent='Saving photo...';
- try{await apiJson('/api/my-version',{method:'POST',body:JSON.stringify({image:capturedPhoto,subject:getDoodleParts().join(' ')})});capturedPhoto=null;$('#camera-status').textContent='Your version is saved to the gallery.';$('#camera-save').hidden=true;if(!$('#gallery-section').hidden)await loadGallery()}
- catch(e){$('#camera-status').textContent=e.message}
- finally{$('#camera-save').disabled=false}
-});
-$('#camera-cancel').addEventListener('click',()=>{stopCamera();capturedPhoto=null;$('#camera-preview').hidden=true;$('#camera-capture').hidden=true;$('#camera-save').hidden=true;$('#camera-cancel').hidden=true;$('#camera-status').textContent=''});
-cur.forEach((k,i)=>show(i,k));
-if(location.hash.startsWith('#r='))applyRollHash();
-</script>
+<script type="module" src="/js/main.js"></script>
 </body>
 </html>

@@ -6,5 +6,8 @@
   "dependencies": {
     "@google/genai": "latest",
     "@vercel/blob": "latest"
+  },
+  "scripts": {
+    "local": "set -a; . ./.env.local; set +a; unset VERCEL_OIDC_TOKEN BLOB_STORE_ID; npx vercel dev"
   }
 }
