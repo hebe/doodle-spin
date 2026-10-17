@@ -1,5 +1,7 @@
 // Doodle parts: each pool item is [name, svgMarkup, ...]. Shared by the reels and the catalog.
-const S=b=>'<svg viewBox="6 6 92 92" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">'+b+'</svg>';
+import { S } from './svg.js';
+import { ANIMALS } from './art-animals.js';
+
 export const OBJ=[
 ['toaster',S('<path d="M36 46V34Q28 32 28 24Q28 16 38 16H62Q72 16 72 24Q72 32 64 34V46Z" class="a"/><path d="M42 42V32q-6-1-6-6q0-4 4-4h20q4 0 4 4q0 5-6 6v10" stroke-width="1.6"/><rect x="14" y="44" width="72" height="42" rx="10" class="p"/><path d="M26 44h48" stroke-width="5"/><path d="M90 58v14M86 58h6"/><circle cx="68" cy="68" r="5" class="a"/><path d="M24 86v5M76 86v5M22 78l8-8M32 78l8-8" /><path d="M24 54q0-3 4-3" stroke-width="2"/>')],
 ['cactus',S('<path d="M40 84V38q0-12 10-12t10 12v46z" class="p"/><path d="M40 62H30q-7 0-7-7V42M60 52h10q7 0 7-7V32M50 38v5M50 52v5M50 66v5"/><path d="M30 84h40l-4 12H34z" class="a"/>')],
@@ -11,7 +13,7 @@ export const OBJ=[
 ['pumpkin',S('<ellipse cx="50" cy="60" rx="38" ry="28" class="a"/><path d="M50 33c-15 10-15 46 0 54M50 33c15 10 15 46 0 54M50 33q-2-12 6-16q6-2 8 2"/>')],
 ['lamp post',S('<path d="M34 34h32l-6-16H40z" class="a"/><path d="M38 18h24M50 34v56M40 90h20M50 50h12q6 0 6 6"/>')],
 ['umbrella',S('<path d="M12 50q0-34 38-34t38 34q-8-8-19-8t-19 8q-8-8-19-8t-19 8z" class="a"/><path d="M50 16v-6M50 46v38q0 8 8 8t8-8"/>')],
-['teapot',S('<path d="M26 60Q10 58 6 36q8 4 14 14z" class="p"/><path d="M22 56Q22 36 48 36T74 56Q74 86 48 86T22 56z" class="p"/><path d="M72 48q18-4 18 12t-16 22"/><path d="M34 38q0-8 14-8t14 8z" class="p"/><circle cx="48" cy="25" r="4" class="a"/>')],
+['teapot',S('<path d="M29 72Q10 70 12 52Q12 44 8 35L19 32Q20 44 24 50Q28 54 31 56Z" class="p"/><path d="M75 48Q86 42 90 50Q95 62 88 70Q82 76 73 74"/><path d="M24 56Q24 38 50 38Q76 38 76 56Q76 80 50 82Q24 80 24 56Z" class="p"/><path d="M37 38Q37 28 50 28Q63 28 63 38Z" class="p"/><rect x="31" y="36" width="38" height="6" rx="3" class="p"/><circle cx="50" cy="24" r="4" class="a"/>')],
 ['lightbulb',S('<path d="M50 12c-20 0-30 14-30 28 0 12 8 18 12 26h36c4-8 12-14 12-26 0-14-10-28-30-28z" class="a"/><path d="M36 66v8h28v-8M38 82h24M42 90h16M42 40l8 14 8-14"/>')],
 ['rocket',S('<path d="M42 70q8 24 16 0z" class="a"/><path d="M50 8c16 12 18 40 14 58H36C32 48 34 20 50 8z" class="p"/><circle cx="50" cy="38" r="8" class="a"/><path d="M36 54L22 72l14-4M64 54l14 18-14-4"/>')],
 ['scissors',S('<path d="M40 66L68 10L58 58z" class="p"/><path d="M60 66L32 10L42 58z" class="p"/><path d="M40 66l-6 6M60 66l6 6"/><circle cx="32" cy="80" r="13" class="a"/><circle cx="32" cy="80" r="6" class="p"/><circle cx="68" cy="80" r="13" class="a"/><circle cx="68" cy="80" r="6" class="p"/><circle cx="50" cy="52" r="3.5" class="k"/>')],
@@ -21,7 +23,7 @@ export const OBJ=[
 ['cloud',S('<path d="M26 66q-14 0-14-14t14-14q2-18 22-18t24 16q16 2 16 16t-16 14z" class="p"/><path d="M30 76l-4 12M46 76l-4 12M62 76l-4 12"/>')],
 ['house',S('<path d="M22 50L50 22l28 28v38H22z" class="p"/><path d="M14 54L50 18l36 36M64 28V16h10v22"/><rect x="42" y="62" width="16" height="26" class="a"/><rect x="28" y="54" width="10" height="10"/>')],
 ['mushroom',S('<path d="M38 54v30q0 8 12 8t12-8V54z" class="p"/><path d="M14 56q0-40 36-40t36 40z" class="a"/><circle cx="36" cy="38" r="5" class="p"/><circle cx="60" cy="32" r="4" class="p"/><circle cx="68" cy="46" r="3" class="p"/>')],
-['ice cream cone',S('<path d="M30 54h40L50 95z" class="p"/><path d="M33 60L56 78M41 74L52 84M67 60L44 78M59 74L48 84"/><circle cx="50" cy="42" r="16" class="a"/><path d="M34 48q4 6 8 0t8 0t8 0t8 0"/><circle cx="50" cy="22" r="12" class="p"/><path d="M42 24l6-6M46 28l8-8" stroke-width="1.6"/>')],
+['ice cream cone',S('<path d="M34 58h32L50 95z" class="a"/><path d="M32 48A20 20 0 1 1 68 48Q80 50 78 58Q76 66 68 64Q64 60 59 63Q54 66 50 62Q46 66 41 63Q36 60 32 64Q24 66 22 58Q20 50 32 48Z" class="p"/>')],
 ['pencil',S('<g transform="rotate(45 50 50)"><rect x="38" y="10" width="24" height="62" class="a"/><path d="M38 72l12 20 12-20z" class="p"/><path d="M45 82l5 10 5-10z" class="k"/><path d="M38 24h24"/></g>')],
 ['anchor',S('<circle cx="50" cy="20" r="9" class="a"/><path d="M50 29v56M36 42h28M18 62q4 24 32 24t32-24M18 62l-6 8M82 62l6 8"/>')],
 ['kite',S('<path d="M50 8l28 34-28 34-28-34z" class="a"/><path d="M50 8v68M22 42h56M50 76q-14 6-4 14t8 8"/>')],
@@ -29,7 +31,8 @@ export const OBJ=[
 ['cupcake',S('<path d="M26 56h48l-6 34H32z" class="p"/><path d="M38 58l2 30M50 58v30M62 58l-2 30"/><path d="M22 56q-4-14 8-18q-2-16 20-18q22 2 20 18q12 4 8 18z" class="a"/><circle cx="50" cy="14" r="5" class="p"/>')],
 ['camera',S('<rect x="12" y="32" width="76" height="52" rx="10" class="p"/><path d="M32 32l6-12h24l6 12"/><circle cx="50" cy="58" r="17" class="a"/><circle cx="50" cy="58" r="8" class="p"/><circle cx="76" cy="44" r="3" class="k"/>')],
 ['cassette tape',S('<rect x="10" y="26" width="80" height="52" rx="6" class="p"/><rect x="24" y="36" width="52" height="20" rx="4" class="a"/><circle cx="36" cy="46" r="5" class="p"/><circle cx="64" cy="46" r="5" class="p"/><path d="M30 78l6-12h28l6 12M38 66v12M62 66v12"/>')],
-['hourglass',S('<path d="M38 24h24q-2 14-12 20q-10-6-12-20zM40 82q10-14 20 0z" class="a"/><path d="M26 12h48M26 88h48M30 12q0 30 20 38q-20 8-20 38M70 12q0 30-20 38q20 8 20 38"/>')]];
+['hourglass',S('<path d="M38 24h24q-2 14-12 20q-10-6-12-20zM40 82q10-14 20 0z" class="a"/><path d="M26 12h48M26 88h48M30 12q0 30 20 38q-20 8-20 38M70 12q0 30-20 38q20 8 20 38"/>')],
+...ANIMALS];
 const sp=(cx,cy)=>{let d='M'+cx+' '+cy;for(let t=.6;t<=12;t+=.6)d+='L'+(cx+t*.75*Math.cos(t)).toFixed(1)+' '+(cy+t*.75*Math.sin(t)).toFixed(1);return '<path d="'+d+'" stroke-width="2"/>'};
 const EY={
 o:(x,d)=>`<ellipse cx="${x}" cy="48" rx="7.5" ry="9.5" class="p"/><ellipse cx="${x+d}" cy="49" rx="4.5" ry="6.5" class="k"/><circle cx="${x+d+1.6}" cy="46.5" r="1.7" class="p" stroke="none"/>`,
