@@ -23,7 +23,7 @@ export const OBJ=[
 ['cloud',S('<path d="M26 66q-14 0-14-14t14-14q2-18 22-18t24 16q16 2 16 16t-16 14z" class="p"/><path d="M30 76l-4 12M46 76l-4 12M62 76l-4 12"/>')],
 ['house',S('<path d="M22 50L50 22l28 28v38H22z" class="p"/><path d="M14 54L50 18l36 36M64 28V16h10v22"/><rect x="42" y="62" width="16" height="26" class="a"/><rect x="28" y="54" width="10" height="10"/>')],
 ['mushroom',S('<path d="M38 54v30q0 8 12 8t12-8V54z" class="p"/><path d="M14 56q0-40 36-40t36 40z" class="a"/><circle cx="36" cy="38" r="5" class="p"/><circle cx="60" cy="32" r="4" class="p"/><circle cx="68" cy="46" r="3" class="p"/>')],
-['ice cream cone',S('<path d="M30 54h40L50 95z" class="p"/><path d="M33 60L56 78M41 74L52 84M67 60L44 78M59 74L48 84"/><circle cx="50" cy="42" r="16" class="a"/><path d="M34 48q4 6 8 0t8 0t8 0t8 0"/><circle cx="50" cy="22" r="12" class="p"/><path d="M42 24l6-6M46 28l8-8" stroke-width="1.6"/>')],
+['ice cream cone',S('<path d="M34 58h32L50 95z" class="a"/><path d="M32 48A20 20 0 1 1 68 48Q80 50 78 58Q76 66 68 64Q64 60 59 63Q54 66 50 62Q46 66 41 63Q36 60 32 64Q24 66 22 58Q20 50 32 48Z" class="p"/>')],
 ['pencil',S('<g transform="rotate(45 50 50)"><rect x="38" y="10" width="24" height="62" class="a"/><path d="M38 72l12 20 12-20z" class="p"/><path d="M45 82l5 10 5-10z" class="k"/><path d="M38 24h24"/></g>')],
 ['anchor',S('<circle cx="50" cy="20" r="9" class="a"/><path d="M50 29v56M36 42h28M18 62q4 24 32 24t32-24M18 62l-6 8M82 62l6 8"/>')],
 ['kite',S('<path d="M50 8l28 34-28 34-28-34z" class="a"/><path d="M50 8v68M22 42h56M50 76q-14 6-4 14t8 8"/>')],
